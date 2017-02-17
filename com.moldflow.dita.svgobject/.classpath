@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/lib/ant.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/lib/ant-apache-resolver-1.9.4.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/lib/ant-launcher.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/lib/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/lib/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/lib/dost.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/lib/dost-configuration.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/lib/icu4j-54.1.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/lib/saxon-9.1.0.8.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/lib/saxon-9.1.0.8-dom.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/lib/xercesImpl-2.11.0.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/lib/xml-apis-1.4.01.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/lib/xml-resolver-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/plugins/org.dita.pdf2.fop/fop/lib/avalon-framework-4.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/plugins/org.dita.pdf2.fop/fop/lib/batik-all-1.7.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/plugins/org.dita.pdf2.fop/fop/lib/commons-io-1.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/plugins/org.dita.pdf2.fop/fop/lib/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/plugins/org.dita.pdf2.fop/fop/lib/log4j.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/plugins/org.dita.pdf2.fop/fop/lib/serializer-2.7.0.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/plugins/org.dita.pdf2.fop/fop/lib/xalan-2.7.0.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/plugins/org.dita.pdf2.fop/fop/lib/xercesImpl-2.7.1.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/plugins/org.dita.pdf2.fop/fop/lib/xml-apis-1.3.04.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/plugins/org.dita.pdf2.fop/fop/lib/xml-apis-ext-1.3.04.jar"/>
+	<classpathentry kind="lib" path="C:/DCS/2.2.2-beta/plugins/org.dita.pdf2.fop/fop/lib/xmlgraphics-commons-1.5.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

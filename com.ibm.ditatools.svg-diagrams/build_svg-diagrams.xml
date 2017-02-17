@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:dita="http://dita-ot.sourceforge.net" name="svg-syntax-as-preprocess-step">
+
+  <target name="svg-syntax-as-preprocess-step" depends="svg-syntax-as-preprocess-step.init, svg-syntax-as-preprocess-step.run">
+      
+  </target>
+
+  <target name="svg-syntax-as-preprocess-step.init">
+    <!-- Plan: can set $render-syntax-diagrams to "railroad" to get old text based diagrams -->
+    <condition property="render-syntax-diagrams" value="svg">
+      <not><isset property="render-syntax-diagrams"/></not>
+    </condition>
+    <condition property="run-svg-syntax-preprocess" value="true">
+      <equals arg1="${render-syntax-diagrams}" arg2="svg"/>
+    </condition>
+    <!-- Skip creating image map versions (which fails with fragref, does not seem useful at this point anyway --> 
+    <condition property="plus.svgobject.raster.imagemap" value="no">
+      <not><isset property="plus.svgobject.raster.imagemap"/></not>
+    </condition>
+    <!-- Default: do not rasterize text into bitmap lines (flips default in plugins as shipped) -->
+    <!-- "no" means diagrams have a reference to CSS, "yes" means CSS is removed when converted to bitmap -->
+    <condition property="plus.svgobject.object.convert-to-path" value="no">
+      <not><isset property="plus.svgobject.object.convert-to-path"/></not>
+    </condition> 
+    <!-- Set up path property used with temp directory JS and CSS files for rendering -->
+    <dirname property="plus.map.temp.dir" file="${dita.temp.dir}/${user.input.file}" />
+  </target>
+
+  <!-- Run the HTML+ twopass model but branch off to create normalized DITA, rather than HTML -->
+  <target name="svg-syntax-as-preprocess-step.run" depends="plus-html-topics-twopass.check.class,
+                                   plus-allhtml-svgobject.before.stage1,
+                                   plus-allhtml-syntaxdiagram-svgobject.init,
+                                   plus-html-topics-twopass-IBM-CUSTOM.stage1.perform,
+                                   plus-allhtml-svgobject.after.stage1">
+  </target>
+
+  <target name="plus-html-topics-twopass-IBM-CUSTOM.stage1.perform" depends="plus-html-topics-twopass.check.class" if="plus.topics.class.twopass">
+<!--
+<antcall target="plus-allhtml-topic2html.xhtml.globmapper">
+<param name="includes" value="${fullditatopiclist} ${chunkedtopiclist}"/>
+<param name="destdir" value="${dita.temp.dir}"/>
+<param name="args.xsl" value="${dita.plugin.com.ibm.ditatools.svg-diagrams.dir}/xsl/stage1-ddita-shell.xsl"/>
+<param name="mapperfrom" value="*"/>
+<param name="mapperto" value="*.synout1"/>
+</antcall>
+-->
+    <condition property="dita.preprocess.reloadstylesheet.svgdiagrams" value="${dita.preprocess.reloadstylesheet}">
+      <not><isset property="dita.preprocess.reloadstylesheet.svgdiagrams"/></not>
+    </condition>
+    <makeurl file="${plus.map.temp.dir}" property="plus.map.temp.dir.url" validate="no"/>
+    <pipeline message="Diagrams to SVG" taskname="svgdiagrams">
+      <xslt basedir="${dita.temp.dir}" 
+            reloadstylesheet="${dita.preprocess.reloadstylesheet.svgdiagrams}" 
+            style="${dita.plugin.com.ibm.ditatools.svg-diagrams.dir}/xsl/stage1-ddita-shell.xsl">
+        <includesfile name="${dita.temp.dir}/${fullditatopicfile}"/>
+        <param name="CSS" expression="${args.css.file}" if="args.css.file"/>
+        <param name="CSSPATH" expression="${user.csspath}" if="user.csspath"/>
+        <param name="OUTEXT" expression="${out.ext}" if="out.ext"/>
+        <param name="plus-temp-directory" expression="${plus.map.temp.dir.url}" if="plus.map.temp.dir.url"/>
+
+        <param name="plus-svgobject-format" expression="${plus.svgobject.format}" if="plus.svgobject.format"/>
+        <param name="plus-svgobject-raster-mimetype" expression="${plus.svgobject.raster.mimetype}" if="plus.svgobject.raster.mimetype"/>
+        <param name="plus-svgobject-object-convert-to-path" expression="${plus.svgobject.object.convert-to-path}" if="plus.svgobject.object.convert-to-path"/>
+        <param name="plus-svgobject-raster-imagemap" expression="${plus.svgobject.raster.imagemap}" if="plus.svgobject.raster.imagemap"/>
+        <param name="plus-svgobject-path" expression="${plus.svgobject.path}" if="plus.svgobject.path"/>
+        <param name="plus-syntaxdiagram-format" expression="${plus.syntaxdiagram.format}" if="plus.syntaxdiagram.format"/>
+        <param name="plus-allhtml-syntaxdiagram-svginline-csspath" expression="${plus-allhtml-syntaxdiagram-svginline.csspath}" if="plus-allhtml-syntaxdiagram-svginline.csspath"/>
+        <param name="plus-allhtml-syntaxdiagram-svginline-jspath" expression="${plus-allhtml-syntaxdiagram-svginline.jspath}" if="plus-allhtml-syntaxdiagram-svginline.jspath"/>
+        <param name="plus-allhtml-syntaxdiagram-svgobject-csspath" expression="${plus-allhtml-syntaxdiagram-svgobject.csspath}" if="plus-allhtml-syntaxdiagram-svgobject.csspath"/>
+        <param name="plus-allhtml-syntaxdiagram-svgobject-jspath" expression="${plus-allhtml-syntaxdiagram-svgobject.jspath}" if="plus-allhtml-syntaxdiagram-svgobject.jspath"/>
+        <param name="input.map.url" expression="${html5.map.url}" if="html5.map.url"/> 
+        <param name="nav-toc" expression="${html5.nav-toc}" if="html5.nav-toc"/>
+
+        <xmlcatalog refid="dita.catalog"/>
+      </xslt>
+    </pipeline>
+<!--
+<echo>Completed conversion</echo>
+-->
+<!--<move todir="${dita.temp.dir}">
+<fileset dir="${dita.temp.dir}" includes="**/*.synout1"/>
+<mapper type="glob" from="*.synout1" to="*"/>
+</move>-->
+  </target>
+
+</project>

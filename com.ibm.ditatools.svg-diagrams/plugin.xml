@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Support SVG syntax diagrams -->
+<plugin id="com.ibm.ditatools.svg-diagrams">
+    <feature extension="depend.preprocess.post" value="svg-syntax-as-preprocess-step"/>
+    <feature extension="dita.conductor.target.relative" file="conductor.xml"/>
+    <!--<require plugin="org.apache.antcontrib"/>-->
+</plugin>

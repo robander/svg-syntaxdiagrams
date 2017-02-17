@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic PUBLIC "-//IBM//DTD DITA IBM Topic//EN"  "ibm-topic.dtd">
+<topic id="synnote" xml:lang="en-us">
+<title>Notes on syntax diagram process</title>
+<shortdesc>Initial description of processing based on Deborah Pickett's SVG diagram process, as
+refactored by Robert.</shortdesc>
+<body>
+<p>For internal purposes, these plugins are stored in the <filepath>pluginsplus</filepath> directory
+because I find this slightly easier for debugging, keeping them distinct from the default
+distributed plugins. This is optional, but for it to work:</p>
+<ul>
+<li>The <filepath>pluginsplus</filepath> directory must be present</li>
+<li>The <filepath>lib/configuration.properties</filepath> file must be updated to recognize this as
+a plugin directory</li>
+</ul>
+<p>The following steps run as part of the SVG process:</p>
+<dl>
+<dlentry>
+<dt><codeph>svg-syntax-as-preprocess-step</codeph></dt>
+<dd>Main target inserted into the preprocess. It runs all following steps as dependencies.</dd>
+</dlentry>
+<dlentry>
+<dt><codeph>svg-syntax-as-preprocess-step.init</codeph></dt>
+<dd>Sets up properties used by the SVG preprocess step, as integrated into DCS.</dd>
+</dlentry>
+<dlentry>
+<dt><codeph>svg-syntax-as-preprocess-step.run</codeph></dt>
+<dd>Runs everything that follows as a depdency chain.</dd>
+</dlentry>
+<dlentry>
+<dt><codeph>plus-html-topics-twopass.check.class</codeph></dt>
+<dd>Sets properties <codeph>plus.topics.class</codeph> and
+<codeph>plus.topics.class.twopass</codeph> if not already set</dd>
+</dlentry>
+<dlentry>
+<dt><codeph>plus-allhtml-svgobject.before.stage1</codeph></dt>
+<dd>Does nothing; depends on <codeph>plus-allhtml-svgobject.init</codeph></dd>
+</dlentry>
+<dlentry>
+<dt><codeph>plus-allhtml-svgobject.init</codeph></dt>
+<dd>Sets up a lot of properties, and very importantly, <codeph>&lt;path></codeph> elements used to
+locate JAR files and Batik.<ul>
+<li><codeph>plus.svgobject.format</codeph> set to "object" so we treat it as &lt;object></li>
+<li><codeph>plus.svgobject.raster.mimetype</codeph> sets format "image/png" for backup images, but
+these are no longer needed</li>
+<li><codeph>plus.svgobject.object.convert-to-path</codeph> whether to convert text to rasterized
+lines; we default to "no" to keep selectable text in the diagrams. Rasterized looks odd in PDF but
+prints well, and looks good if zoomed in. Non-rasterized is dependent on fonts.</li>
+<li><codeph>plus.svgobject.raster.imagemap</codeph> whether to generate image map versions of SVG,
+we default to no (not needed, and code is broken for &lt;fragref> anyway).</li>
+<li><codeph>plus.svgobject.path</codeph> path to use relative to output directory, for SVG files,
+default <filepath>svgobject</filepath></li>
+</ul></dd>
+</dlentry>
+<dlentry>
+<dt><codeph>plus-allhtml-syntaxdiagram-svgobject.init</codeph></dt>
+<dd>Sets more properties<ul>
+<li><codeph>plus.syntaxdiagram.format</codeph> "Syntax Diagram format to be placed into XHTML
+output." Defaults to: "svgobject"</li>
+<li><codeph>plus-allhtml-syntaxdiagram-svgobject.csspath</codeph> and
+<codeph>plus-allhtml-syntaxdiagram-svgobject.jspath</codeph>: paths used to store CSS and JS in temp
+directory, used in rendering process</li>
+<li/>
+</ul></dd>
+</dlentry>
+<dlentry>
+<dt><codeph>plus-html-topics-twopass-IBM-CUSTOM.stage1.perform</codeph></dt>
+<dd>Extract the diagrams as pseudo-SVG (ready for further processing), and insert &lt;object> /
+&lt;image> elements in the DITA to reference the to-be-created diagram images. Runs
+<filepath>com.ibm.ditatools.svg-diagrams/xsl/stage1-ddita-shell.xsl</filepath>. Result: DITA docs
+with diagrams are all updated to replace the diagram with an image reference. The XSL also generates
+<filepath>_dynamic.svg</filepath> and <filepath>_topath.svg</filepath> versions of each diagram in
+the <filepath>svgobject</filepath> directory in temp dir (depending on parameters; we turn off the
+"topath" version by turning off the rasterizing of text.</dd>
+</dlentry>
+<dlentry>
+<dt><codeph>plus-allhtml-svgobject.after.stage1</codeph></dt>
+<dd>Another target with a long dependency chain and nothing else; kicks off everything that
+follows.</dd>
+</dlentry>
+<dlentry>
+<dt>plus-allhtml-svgobject.make-static</dt>
+<dd>
+<ol>
+<li>Defines task <codeph>svg-make-static</codeph> as reference to class
+<codeph>com.moldflow.batik.ant.SVGMakeStatic</codeph></li>
+<li>Runs <codeph>svg-make-static</codeph>; input is everything in temp dir matching
+<filepath>**/*_dynamic.svg</filepath>, output is <filepath>*.svgrendered</filepath></li>
+<li><filepath>**/*.svgrendered</filepath> files renamed to <filepath>*.svg</filepath></li>
+</ol>
+</dd>
+</dlentry>
+<dlentry>
+<dt>plus-allhtml-svgobject.make-imagemaps</dt>
+<dd>We skip this step. Otherwise, it would run
+<filepath>${plus-allhtml-svgobject.dir}/xsl/svg2imagemap-shell.xsl</filepath> over all SVG files,
+map to <filepath>.svg.imagemap</filepath></dd>
+</dlentry>
+<dlentry>
+<dt>plus-allhtml-svgobject.convert-to-path</dt>
+<dd>We skip this step because we turn off rasterizing of text. Otherwise it would:<ol>
+<li>Define task <codeph>svg2svg</codeph> as reference to class
+<codeph>com.moldflow.batik.ant.SVGRender</codeph></li>
+<li>Run <codeph>svg2svg</codeph>; input is everything in temp dir matching
+<filepath>**/*_topath.svg</filepath>, output is <filepath>*.svgrendered</filepath></li>
+<li><filepath>**/*.svgrendered</filepath> files renamed to <filepath>*.svg</filepath></li>
+</ol></dd>
+</dlentry>
+<dlentry>
+<dt>plus-allhtml-svgobject.copy-svgobject</dt>
+<dd>Copies all SVG files from temp dir to
+<filepath>${output.dir}${file.separator}${plus.svgobject.path}</filepath></dd>
+</dlentry>
+<dlentry>
+<dt>plus-allhtml-svgobject.rasterize</dt>
+<dd>Original code would run Batik rasterizer on every SVG diagram (source and generated). It's all
+commented out so does nothing.</dd>
+</dlentry>
+</dl>
+</body>
+</topic>

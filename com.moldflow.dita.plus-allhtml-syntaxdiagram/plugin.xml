@@ -1,0 +1,9 @@
+<plugin id="com.moldflow.dita.plus-allhtml-syntaxdiagram">
+  <!--<require plugin="com.moldflow.dita.plus-transtype-anyhtml"/>-->
+
+  <template file="build_plus-allhtml-syntaxdiagram_template.xml"/>
+
+  <feature extension="dita.conductor.xhtml.param" value="insert-ant-topic-html-xslt.xml" type="file"/>
+  <feature extension="dita.conductor.target.relative" value="build.xml" type="file"/>
+
+</plugin>

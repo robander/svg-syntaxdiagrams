@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="jar" name="SVGTranscoder">
+    <target name="clean">
+        <delete>
+            <fileset dir="build" includes="**/*.class"/>
+        </delete>
+    </target>
+
+    <target name="build">
+    <path id="dost.plus.batik.path">
+    <!--<pathelement location="${dita.dir}${file.separator}pluginsplus/org.apache.xmlgraphics.batik/batik.jar"/>-->
+    <pathelement location="../../plugins/org.dita.pdf2.fop/fop/lib/batik-all-1.7.jar"/>
+    
+    <!--<pathelement location="${dita.plugin.batik-1.7.dir}/batik-svgpp.jar"/>
+    <pathelement location="${dita.plugin.batik-1.7.dir}/batik-ttf2svg.jar"/>
+    <pathelement location="${dita.plugin.batik-1.7.dir}/batik-rasterizer.jar"/>
+    <pathelement location="${dita.plugin.batik-1.7.dir}/lib/js.jar"/>
+    <pathelement location="${dita.plugin.batik-1.7.dir}/RasterizerTask.jar"/>-->
+    </path>
+        <mkdir dir="build"/>
+        <javac destdir="build" source="1.7" target="1.7" classpathref="dost.plus.batik.path">
+            <src path="src"/>
+        </javac>
+    </target>
+
+    <target depends="build" name="jar">
+        <mkdir dir="lib"/>
+        <jar basedir="build" destfile="lib/svgrenderingtranscoder.jar" includes="**/*.class"/>
+    </target>
+
+</project>
