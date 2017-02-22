@@ -3,5 +3,6 @@
 <plugin id="com.ibm.ditatools.svg-diagrams">
     <feature extension="depend.preprocess.post" value="svg-syntax-as-preprocess-step"/>
     <feature extension="dita.conductor.target.relative" file="conductor.xml"/>
+    <feature extension="dita.xsl.xslfo" file="xsl/svgdiagrams-pdf.xsl"/>
     <!--<require plugin="org.apache.antcontrib"/>-->
 </plugin>
