@@ -301,6 +301,7 @@
         <isset property="plus-allhtml-svgobject.exist.svgobject"/>
         <equals arg1="${plus.svgobject.format}" arg2="object"/>
         <not><isset property="plus-allhtml-svgobject.skip-svg-copy"/></not>
+        <not><isset property="preprocess.copy-image.skip"/></not>
       </and>
     </condition>
   </target>
