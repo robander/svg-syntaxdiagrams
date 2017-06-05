@@ -17,89 +17,15 @@
   <target name="plus-allhtml-svgobject.init">
 
   <path id="dost.class.path.svgbatik">
-  <pathelement location="${dita.dir}${file.separator}../org.apache.xmlgraphics.batik/batik.jar"/>
-  <!--
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik.jar"/>
--->
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik-svgpp.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik-ttf2svg.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik-rasterizer.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/lib/js.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/RasterizerTask.jar"/>
-  <pathelement location="${dita.plugin.com.moldflow.dita.svgobject.dir}/lib/svgrenderingtranscoder.jar"/>
-  <pathelement location="${dita.dir}${file.separator}../../plugins/org.dita.pdf2/lib/fo.jar"/>
-  <pathelement location="${dita.dir}${file.separator}../../plugins/org.apache.antcontrib/ant-contrib-1.0b3.jar"/>
-  <pathelement location="${dita.dir}${file.separator}../com.moldflow.dita.svgobject/lib/svgrenderingtranscoder.jar"/>
-  <pathelement location="${dita.dir}${file.separator}../../plugins/org.dita.pdf2.axf/lib/axf.jar"/>
-  <pathelement location="${dita.dir}${file.separator}../../plugins/org.dita.pdf2.xep/lib/xep.jar"/>
-  <pathelement location="${dita.dir}/lib/dost.jar"/>
-  <pathelement location="${dita.dir}/lib/dost-configuration.jar"/>
-  
-  </path>
-
-  <path id="dost.class.path.svgbatik.SAVE">
-  <dita:extension id="dita.conductor.lib.import" behavior="org.dita.dost.platform.ImportAntLibAction"/>
-<!--
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik.jar"/>
--->
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik-svgpp.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik-ttfsvg.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik-rasterizer.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/lib/js.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/RasterizerTask.jar"/>
-  <pathelement location="${dita.plugin.com.moldflow.dita.svgobject.dir}/lib/svgrenderingtranscoder.jar"/>
-  <pathelement location="${dita.dir}/lib/dost.jar"/>
-  <pathelement location="${dita.dir}/lib/dost-configuration.jar"/>
-  
+    <fileset dir="${dita.plugin.batik-1.7.dir}">
+      <include name="*.jar"/>
+      <include name="lib/*.jar"/>
+    </fileset>
+    <pathelement location="${dita.plugin.com.moldflow.dita.svgobject.dir}/lib/svgrenderingtranscoder.jar"/>
+    <pathelement location="${dita.dir}/lib/dost.jar"/>
+    <pathelement location="${dita.dir}/lib/dost-configuration.jar"/>
   </path>
   
-  <!--<feature extension="dita.conductor.lib.import" file="batik.jar"/>
-    <feature extension="dita.conductor.lib.import" file="batik-svgpp.jar"/>
-    <feature extension="dita.conductor.lib.import" file="batik-ttfsvg.jar"/>
-    <feature extension="dita.conductor.lib.import" file="batik-rasterizer.jar"/>
-    <feature extension="dita.conductor.lib.import" file="lib/js.jar"/>
-    <feature extension="dita.conductor.lib.import" file="RasterizerTask.jar"/>-->
-
-  <path id="dost.plus.batik.path2">
-  <!--<pathelement location="${dita.dir}${file.separator}pluginsplus/org.apache.xmlgraphics.batik/batik.jar"/>-->
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik-svgpp.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik-ttf2svg.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik-rasterizer.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/lib/js.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/RasterizerTask.jar"/>
-  <!--<fileset dir="${dita.dir}/lib/">
-  <include name="*.jar" />
-  </fileset>
-  <fileset dir="${dita.dir}/plugins/org.dita.pdf2.fop/fop/lib/">
-  <include name="*.jar" />
-  </fileset>-->
-  
-  <path refid="dost.class.path"/>
-  <!--<fileset dir="${dita.plugin.batik-1.7.dir}/../">
-      <include name="**/*.jar" />
-    </fileset>-->
-  
-  
-  </path>
-
-  <path id="dost.plus.batik.path">
-  <!--<pathelement location="${dita.dir}${file.separator}pluginsplus/org.apache.xmlgraphics.batik/batik.jar"/>-->
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik-svgpp.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik-ttf2svg.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/batik-rasterizer.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/lib/js.jar"/>
-  <pathelement location="${dita.plugin.batik-1.7.dir}/RasterizerTask.jar"/>
-  
-  <path refid="dost.class.path"/>
-    <!--<fileset dir="${dita.plugin.batik-1.7.dir}/../">
-      <include name="**/*.jar" />
-    </fileset>-->
-  
-  
-  </path>
-
     <!-- Default HTML output format for SVG objects.
          Choices: raster, object. -->
     <condition property="plus.svgobject.format" value="object">
@@ -149,8 +75,7 @@
 
     <!-- SVG-to-SVG transcoder for making dynamic SVG (with scripts, e.g. syntaxdiagrams) static. -->
     <!-- Pick one of the classes known to be in the jar. -->
-    <!--<available classname="com.moldflow.batik.ant.SVGMakeStatic" property="plus-allhtml-svgobject.svgobject.plugin.available" classpathref="dost.plus.batik.path"/>-->
-  <available classname="com.moldflow.batik.ant.SVGMakeStatic" property="plus-allhtml-svgobject.svgobject.plugin.available" classpathref="dost.class.path.svgbatik"/>
+    <available classname="com.moldflow.batik.ant.SVGMakeStatic" property="plus-allhtml-svgobject.svgobject.plugin.available" classpathref="dost.class.path.svgbatik"/>
 
     <!-- Should create imagemaps? -->
     <condition property="plus-allhtml-svgobject.make-imagemaps.required">
