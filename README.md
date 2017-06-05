@@ -4,6 +4,7 @@ These plugins are based on Deborah Pickett's "HTML Plus" plugins, originally
 published in the Yahoo dita-users group. The original plugins were written 
 for a much older version of the toolkit (1.4 or 1.5) and needed fairly
 substantial updating to be compatible with all of the changes since that time.
+The latest updates have been tested with DITA-OT 2.5.
 
 Additionally, the original plugins performed a number of functions related
 to XHTML, using a multi-step "twopass" process. I've extracted the SVG processing
@@ -39,5 +40,3 @@ time diagnosing this and continued using the version Deborah bundled.
 1. While removing unnecessary or obsolete code, I commented out a lot of sections.
 This means the current code still has a lot of code that no longer runs. That
 code should be removed.
-1. I've got this working in DITA-OT 2.3. I just tried it in 2.4 and got an 
-error, but haven't tried to track that down yet.
