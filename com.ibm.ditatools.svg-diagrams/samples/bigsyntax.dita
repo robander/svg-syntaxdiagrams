@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dita PUBLIC "-//OASIS//DTD DITA Composite//EN" "ditabase.dtd">
+<dita xml:lang="en">
+  <topic id="topic_opc_v1b_vx">
+    <title>Lots of syntax testing</title>
+<topic id="topic_myx_v1b_vx">
+<title>Groups</title>
+<body>
+<syntaxdiagram id="syntaxdiagram_zks_qp3_qbb">
+<groupseq>
+<kwd>Innocent developer</kwd>
+<groupchoice>
+<repsep>REPEAT</repsep>
+<groupseq>
+<var>Write syntax generator</var>
+<delim>:</delim>
+<groupchoice>
+<kwd>pain</kwd>
+<kwd>anguish</kwd>
+<kwd importance="default">complaints</kwd>
+</groupchoice>
+</groupseq>
+<groupseq>
+<var>Do not write syntax generator</var>
+<delim>:</delim>
+<groupchoice>
+<kwd importance="default">joy</kwd>
+<kwd>fun</kwd>
+<kwd>peace</kwd>
+</groupchoice>
+</groupseq>
+</groupchoice>
+</groupseq>
+</syntaxdiagram>
+<syntaxdiagram id="syntaxdiagram_y1x_y1b_vx">
+<title>Syntax with 3 group types</title>
+<groupchoice>
+<!--<title>Group choice</title>-->
+<kwd>this</kwd>
+<kwd>is</kwd>
+<kwd>group</kwd>
+<kwd>choice</kwd>
+</groupchoice>
+<groupcomp>
+<!--<title>Group comp</title>-->
+<kwd>this</kwd>
+<kwd>is</kwd>
+<kwd>group</kwd>
+<kwd>comp</kwd>
+</groupcomp>
+<groupseq>
+<!--<title>Group seq</title>-->
+<kwd>this</kwd>
+<kwd>is</kwd>
+<kwd>group</kwd>
+<kwd>seq</kwd>
+</groupseq>
+</syntaxdiagram>
+<syntaxdiagram id="syntaxdiagram_dqb_cbb_vx">
+<title>3 Optional groups</title>
+<groupchoice importance="optional">
+<!--<title>Group choice</title>-->
+<kwd>this</kwd>
+<kwd>is</kwd>
+<kwd>group</kwd>
+<kwd>choice</kwd>
+</groupchoice>
+<groupcomp importance="optional">
+<!--<title>Group comp</title>-->
+<kwd>this</kwd>
+<kwd>is</kwd>
+<kwd>group</kwd>
+<kwd>comp</kwd>
+</groupcomp>
+<groupseq importance="optional">
+<!--<title>Group seq</title>-->
+<kwd>this</kwd>
+<kwd>is</kwd>
+<kwd>group</kwd>
+<kwd>seq</kwd>
+</groupseq>
+</syntaxdiagram>
+<syntaxdiagram id="syntaxdiagram_pkg_dbb_vx">
+<title>3 default groups</title>
+<groupchoice importance="default">
+<!--<title>Group choice</title>-->
+<kwd>this</kwd>
+<kwd>is</kwd>
+<kwd>group</kwd>
+<kwd>choice</kwd>
+</groupchoice>
+<groupcomp importance="default">
+<!--<title>Group comp</title>-->
+<kwd>this</kwd>
+<kwd>is</kwd>
+<kwd>group</kwd>
+<kwd>comp</kwd>
+</groupcomp>
+<groupseq importance="default">
+<!--<title>Group seq</title>-->
+<kwd>this</kwd>
+<kwd>is</kwd>
+<kwd>group</kwd>
+<kwd>seq</kwd>
+</groupseq>
+</syntaxdiagram>
+<syntaxdiagram id="syntaxdiagram_czp_2bb_vx">
+<title>3 required groups</title>
+<groupchoice importance="required">
+<!--<title>Group choice</title>-->
+<kwd>this</kwd>
+<kwd>is</kwd>
+<kwd>group</kwd>
+<kwd>choice</kwd>
+</groupchoice>
+<groupcomp importance="required">
+<!--<title>Group comp</title>-->
+<kwd>this</kwd>
+<kwd>is</kwd>
+<kwd>group</kwd>
+<kwd>comp</kwd>
+</groupcomp>
+<groupseq importance="required">
+<!--<title>Group seq</title>-->
+<kwd>this</kwd>
+<kwd>is</kwd>
+<kwd>group</kwd>
+<kwd>seq</kwd>
+</groupseq>
+</syntaxdiagram>
+</body>
+</topic>
+<topic id="topic_xv4_fbb_vx">
+<title>Groups in groups</title>
+<body>
+<syntaxdiagram id="syntaxdiagram_zwj_gbb_vx">
+<title>In group comp</title>
+<groupcomp>
+<kwd>start</kwd>
+<groupcomp>
+<kwd>groupcompInMiddle</kwd>
+<kwd>kwd2</kwd>
+<kwd>kwd3</kwd>
+</groupcomp>
+<groupchoice>
+<kwd>groupchoiceInMiddle</kwd>
+<kwd>kwd2</kwd>
+<kwd>kwd3</kwd>
+</groupchoice>
+<groupseq>
+<kwd>groupseqinmiddle</kwd>
+<kwd>kwd2</kwd>
+<kwd>kwd3</kwd>
+</groupseq>
+<kwd>end</kwd>
+</groupcomp>
+</syntaxdiagram>
+<syntaxdiagram id="syntaxdiagram_zdn_jbb_vx">
+<title>In group choice</title>
+<groupchoice>
+<kwd>start</kwd>
+<groupcomp>
+<kwd>groupcompInMiddle</kwd>
+<kwd>kwd2</kwd>
+<kwd>kwd3</kwd>
+</groupcomp>
+<groupchoice>
+<kwd>groupchoiceInMiddle</kwd>
+<kwd>kwd2</kwd>
+<kwd>kwd3</kwd>
+</groupchoice>
+<groupseq>
+<kwd>groupseqinmiddle</kwd>
+<kwd>kwd2</kwd>
+<kwd>kwd3</kwd>
+</groupseq>
+<kwd>end</kwd>
+</groupchoice>
+</syntaxdiagram>
+<syntaxdiagram id="syntaxdiagram_xsf_kbb_vx">
+<title>In group seq</title>
+<groupseq>
+<kwd>start</kwd>
+<groupcomp>
+<kwd>groupcompInMiddle</kwd>
+<kwd>kwd2</kwd>
+<kwd>kwd3</kwd>
+</groupcomp>
+<groupchoice>
+<kwd>groupchoiceInMiddle</kwd>
+<kwd>kwd2</kwd>
+<kwd>kwd3</kwd>
+</groupchoice>
+<groupseq>
+<kwd>groupseqinmiddle</kwd>
+<kwd>kwd2</kwd>
+<kwd>kwd3</kwd>
+</groupseq>
+<kwd>end</kwd>
+</groupseq>
+</syntaxdiagram>
+</body>
+</topic>
+<topic id="topic_icc_lbb_vx">
+<title>Group contents</title>
+<body>
+<syntaxdiagram id="syntaxdiagram_xhg_mbb_vx">
+<title>Test little elements</title>
+<groupchoice>
+<title>No importance</title>
+<repsep>R</repsep>
+<kwd>kwd</kwd>
+<delim>delim</delim>
+<oper>oper</oper>
+<sep>sep</sep>
+<var>var</var>
+</groupchoice>
+<groupchoice>
+<title>default importance</title>
+<repsep>R(no)</repsep>
+<kwd importance="default">kwd</kwd>
+<delim>delim no default</delim>
+<oper importance="default">oper</oper>
+<sep>sep no default</sep>
+<var importance="default">var</var>
+</groupchoice>
+<groupchoice>
+<title>optional importance</title>
+<repsep importance="optional">R</repsep>
+<kwd importance="optional">kwd</kwd>
+<delim importance="optional">delim</delim>
+<oper importance="optional">oper</oper>
+<sep importance="optional">sep</sep>
+<var importance="optional">var</var>
+</groupchoice>
+<groupchoice>
+<title>required importance</title>
+<repsep importance="required">R</repsep>
+<kwd importance="required">kwd</kwd>
+<delim importance="required">delim</delim>
+<oper importance="required">oper</oper>
+<sep importance="required">sep</sep>
+<var importance="required">var</var>
+</groupchoice>
+</syntaxdiagram>
+</body>
+</topic>
+<topic id="topic_nsh_vbb_vx">
+<title>Fragments</title>
+<body>
+<syntaxdiagram id="syntaxdiagram_uqs_vbb_vx">
+<title>Test fragments</title>
+<fragment id="f">
+<title>start with fragment</title>
+<groupchoice>
+<repsep>R</repsep>
+<kwd>kwd</kwd>
+<delim>delim</delim>
+<oper>oper</oper>
+<sep>sep</sep>
+<var>var</var>
+</groupchoice>
+</fragment>
+<groupchoice>
+<title>Kwd then fragref then fragref</title>
+<kwd>kwd</kwd>
+<fragref>fragref in group</fragref>
+<fragref href="#topic_nsh_vbb_vx/f"/>
+</groupchoice>
+</syntaxdiagram>
+</body>
+</topic>
+<topic id="topic_g4m_fcb_vx">
+<title>synblocks</title>
+<body>
+<syntaxdiagram id="syntaxdiagram_wpv_fcb_vx">
+<title>Use some blocks</title>
+<synblk>
+<title>Block with repeating groupchoice</title>
+<groupchoice>
+<repsep>R</repsep>
+<kwd>kwd</kwd>
+<delim>delim</delim>
+<oper>oper</oper>
+<sep>sep</sep>
+<var>var</var>
+</groupchoice>
+</synblk>
+<synblk>
+<title>Block with repeating groupcomp</title>
+<groupcomp>
+<repsep>R</repsep>
+<kwd>kwd</kwd>
+<delim>delim</delim>
+<oper>oper</oper>
+<sep>sep</sep>
+<var>var</var>
+</groupcomp>
+</synblk>
+<synblk>
+<title>Block with repeating groupseq</title>
+<groupseq>
+<repsep>R</repsep>
+<kwd>kwd</kwd>
+<delim>delim</delim>
+<oper>oper</oper>
+<sep>sep</sep>
+<var>var</var>
+</groupseq>
+</synblk>
+</syntaxdiagram>
+<syntaxdiagram id="syntaxdiagram_ux4_rxg_2z">
+<title>Mike's diagram</title>
+<groupseq>
+<var importance="required">required_item</var>
+<fragref>FRAGMENT</fragref>
+</groupseq>
+<fragment>
+<title>FRAGMENT</title>
+<groupchoice>
+<var>parameter1</var>
+<groupseq>
+<var>parameter2</var>
+<groupchoice>
+<var>parameter3</var>
+<var>parameter4</var>
+</groupchoice>
+</groupseq>
+</groupchoice>
+</fragment>
+</syntaxdiagram>
+<syntaxdiagram id="syntaxdiagram_xzj_lyg_2z">
+<title>Choice in choice in choice in choice in ...</title>
+<groupchoice>
+<kwd>kwdgroup1, then:</kwd>
+<groupchoice>
+<kwd>kwdgroup2, then:</kwd>
+<groupchoice>
+<kwd>kwdgroup3, then:</kwd>
+<groupchoice>
+<kwd>kwdgroup4, then:</kwd>
+<kwd>:end group4</kwd>
+</groupchoice>
+<kwd>:end group3</kwd>
+</groupchoice>
+<kwd>:end group2</kwd>
+</groupchoice>
+<kwd>:end group1</kwd>
+</groupchoice>
+</syntaxdiagram>
+<syntaxdiagram id="syntaxdiagram_ess_qyg_2z">
+<title>Choice in seq in choice in seq in ...</title>
+<groupchoice>
+<kwd>kwdgroup1, then:</kwd>
+<groupseq>
+<kwd>seq1:</kwd>
+<groupchoice>
+<kwd>kwdgroup2, then:</kwd>
+<groupseq>
+<kwd>seq2:</kwd>
+<groupchoice>
+<kwd>kwdgroup3, then:</kwd>
+<groupseq>
+<kwd>seq3:</kwd>
+<groupchoice>
+<kwd>kwdgroup4, then:</kwd>
+<kwd>:end group4</kwd>
+</groupchoice>
+<kwd>:end seq3</kwd>
+</groupseq>
+<kwd>:end group3</kwd>
+</groupchoice>
+<kwd>:end seq2</kwd>
+</groupseq>
+<kwd>:end group2</kwd>
+</groupchoice>
+<kwd>:end seq1</kwd>
+</groupseq>
+<kwd>:end group1</kwd>
+</groupchoice>
+</syntaxdiagram>
+<syntaxdiagram id="syntaxdiagram_gt5_pzg_2z">
+<title>Focus on sequences</title>
+<groupseq>
+<var>seq1</var>
+<var>seq2</var>
+<groupchoice>
+<title>group choice in the sequence</title>
+<kwd>choice 1</kwd>
+<kwd>choice 2</kwd>
+<kwd>choice 3</kwd>
+</groupchoice>
+<var>[seq3 after group]</var>
+</groupseq>
+</syntaxdiagram>
+</body>
+</topic>
+  </topic>
+</dita>

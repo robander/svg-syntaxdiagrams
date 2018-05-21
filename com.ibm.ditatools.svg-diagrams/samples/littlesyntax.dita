@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<topic id="littlesyntax" xml:lang="en">
+<title>Little diagrams</title>
+<body>
+<syntaxdiagram id="syntaxdiagram_a5h_vbl_ddb">
+<groupchoice>
+<kwd>kwd</kwd>
+<delim>delim</delim>
+<oper>oper</oper>
+<sep>sep</sep>
+<var>var</var>
+</groupchoice>
+</syntaxdiagram>
+<syntaxdiagram id="syntaxdiagram_grw_vbl_ddb">
+<title>Little one with a title</title>
+<groupchoice>
+<kwd>a</kwd>
+<kwd>b</kwd>
+</groupchoice>
+</syntaxdiagram>
+<syntaxdiagram id="syntaxdiagram_lly_1zx_vdb">
+<title>Little one with a title and nested groups</title>
+<groupchoice>
+<kwd>a</kwd>
+<groupseq>
+<kwd>seq</kwd>
+<kwd>group</kwd>
+<groupcomp>
+<kwd>comp</kwd>
+<kwd>group</kwd>
+</groupcomp>
+</groupseq>
+<kwd>b</kwd>
+</groupchoice>
+</syntaxdiagram>
+</body>
+</topic>
