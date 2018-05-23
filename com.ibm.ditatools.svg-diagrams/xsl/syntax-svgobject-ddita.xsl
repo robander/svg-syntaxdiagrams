@@ -1,4 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?><xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:syntaxdiagram-svgobject="http://www.moldflow.com/namespace/2008/plus-allhtml-syntaxdiagram-svgobject" xmlns:svgobject="http://www.moldflow.com/namespace/2008/dita/svgobject" xmlns:syntaxdiagram2svg="http://www.moldflow.com/namespace/2008/syntaxdiagram2svg" exclude-result-prefixes="syntaxdiagram-svgobject syntaxdiagram2svg">
+<?xml version="1.0" encoding="utf-8"?><xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:svg="http://www.w3.org/2000/svg" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xmlns:syntaxdiagram-svgobject="http://www.moldflow.com/namespace/2008/plus-allhtml-syntaxdiagram-svgobject" 
+    xmlns:svgobject="http://www.moldflow.com/namespace/2008/dita/svgobject" 
+    xmlns:syntaxdiagram2svg="http://www.moldflow.com/namespace/2008/syntaxdiagram2svg" 
+    exclude-result-prefixes="syntaxdiagram-svgobject syntaxdiagram2svg xs">
 
     
 <xsl:import href="plugin:com.moldflow.dita.syntaxdiagram2svg:xsl/syntaxdiagram2svg.xsl"/>
@@ -9,6 +16,9 @@
 
     <xsl:param name="CURRENTDIR"></xsl:param>
     <xsl:param name="CURRENTFILE"></xsl:param>
+
+    <xsl:variable name="syntaxnewline"><xsl:text>
+</xsl:text></xsl:variable>
 
     <!-- Entry point. -->
     <xsl:template match="*[contains(@class, &apos; pr-d/syntaxdiagram &apos;)]">
@@ -117,6 +127,10 @@
                 <xsl:when test="count(preceding-sibling::*) = 0 or                     preceding-sibling::*[1][                     contains(@class, &apos; topic/title &apos;)                     or contains(@class, &apos; pr-d/syntaxdiagram &apos;)                     or contains(@class, &apos; pr-d/synblk &apos;)                     or contains(@class, &apos; pr-d/fragment &apos;)]">
                     <!-- Other elements start a syntax diagram. -->
                     <figgroup class="- topic/figgroup " outputclass="syntaxdiagram-piece">
+                        <xsl:variable name="syntax-pieces" as="element()">
+                            <!-- Collects pieces that will be in this fragment, for evaluation in accessible portion -->
+                            <wrapper><xsl:apply-templates select="." mode="syntaxdiagram2svg:collect-for-a11y"/></wrapper>
+                        </xsl:variable>
                         <!--<xsl:attribute name="class">syntaxdiagram-piece</xsl:attribute>-->
 
                         <xsl:apply-templates select="." mode="svgobject:generate-reference">
@@ -138,6 +152,9 @@
                                </xsl:with-param>
                             </xsl:call-template>
                           </xsl:with-param>
+                          <xsl:with-param name="textversion">
+                              <xsl:apply-templates select="$syntax-pieces" mode="syntaxdiagram2svg:create-accessible-version"/>
+                          </xsl:with-param>
                           <xsl:with-param name="make-static" select="&apos;yes&apos;"></xsl:with-param>
                         </xsl:apply-templates>
                     </figgroup>
@@ -145,6 +162,149 @@
             </xsl:choose>
         </xsl:for-each>
     </xsl:template>
+
+    <xsl:template match="wrapper" mode="syntaxdiagram2svg:create-accessible-version">
+        <!--<xsl:apply-templates select="." mode="syntaxdiagram2svg:create-accessible-version"/>-->
+        <xsl:apply-templates select="*[1]" mode="syntaxdiagram2svg:create-accessible-version">
+            <xsl:with-param name="prefix" select="''" as="xs:string"/>
+            <xsl:with-param name="grouplevel" select="'1'"/>
+        </xsl:apply-templates>        
+    </xsl:template>
+    
+    <xsl:template match="*" mode="syntaxdiagram2svg:create-accessible-version">
+        <xsl:param name="prefix" select="''" as="xs:string"/>
+        <xsl:param name="grouplevel" select="'1'"/>
+        <xsl:apply-templates select="*" mode="syntaxdiagram2svg:create-accessible-version">
+            <xsl:with-param name="prefix" select="$prefix" as="xs:string"/>
+            <xsl:with-param name="grouplevel" select="$grouplevel"/>
+        </xsl:apply-templates>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="accessible-prefix">
+        <xsl:param name="prefix" select="''" as="xs:string"/>
+        <xsl:param name="grouplevel" select="'1'"/>
+        <xsl:choose>
+            <xsl:when test="parent::*[contains(@class,' pr-d/groupcomp ') or contains(@class,' pr-d/groupseq ')] and
+                not(preceding-sibling::*[contains(@class,' pr-d/groupchoice ')])"/>
+            <xsl:when test="not(preceding-sibling::*) or 
+                            preceding-sibling::*[contains(@class,' pr-d/groupchoice ')] or 
+                            parent::*[contains(@class,' pr-d/groupchoice ')]">
+                <xsl:value-of select="$syntaxnewline"/>
+                <xsl:value-of select="if ($prefix='') then ($grouplevel) else (concat($prefix,'.',$grouplevel))"/>
+            </xsl:when>
+        </xsl:choose>
+        <xsl:choose>
+            <xsl:when test="@importance='default'">!</xsl:when>
+            <xsl:when test="@importance='optional'">?</xsl:when>
+            <xsl:when test="@importance='required'"></xsl:when>
+        </xsl:choose>
+        <xsl:if test="not(parent::*[contains(@class,' pr-d/groupcomp ')])"><xsl:text> </xsl:text></xsl:if>
+    </xsl:template>
+    
+    <xsl:template match="*[contains(@class,' pr-d/fragref ')]" mode="syntaxdiagram2svg:create-accessible-version">
+        <xsl:param name="prefix" select="''" as="xs:string"/>
+        <xsl:param name="grouplevel" select="''"/>
+        <xsl:apply-templates select="." mode="accessible-prefix"><xsl:with-param name="prefix" select="$prefix" as="xs:string"/><xsl:with-param name="grouplevel" select="$grouplevel"/></xsl:apply-templates>
+        <xsl:text>%</xsl:text>
+        <xsl:value-of select="."/>
+        <xsl:apply-templates select="following-sibling::*[1]" mode="syntaxdiagram2svg:create-accessible-version">
+          <xsl:with-param name="prefix" select="$prefix" as="xs:string"/>
+          <xsl:with-param name="grouplevel" select="$grouplevel"/>
+        </xsl:apply-templates>
+    </xsl:template>
+    
+    <xsl:template match="*[contains(@class,' pr-d/groupcomp ')]" mode="syntaxdiagram2svg:create-accessible-version">
+        <xsl:param name="prefix" select="''" as="xs:string"/>
+        <xsl:param name="grouplevel" select="''"/>
+        <xsl:apply-templates select="." mode="accessible-prefix"><xsl:with-param name="prefix" select="$prefix" as="xs:string"/><xsl:with-param name="grouplevel" select="$grouplevel"/></xsl:apply-templates>
+        <xsl:apply-templates select="*" mode="syntaxdiagram2svg:create-accessible-version">
+            <xsl:with-param name="prefix" select="$prefix" as="xs:string"/>
+            <xsl:with-param name="grouplevel" select="$grouplevel"/>
+        </xsl:apply-templates>
+        <xsl:apply-templates select="following-sibling::*[1]" mode="syntaxdiagram2svg:create-accessible-version">
+            <xsl:with-param name="prefix" select="$prefix" as="xs:string"/>
+            <xsl:with-param name="grouplevel" select="$grouplevel"/>
+        </xsl:apply-templates>
+    </xsl:template>
+    <xsl:template match="*[contains(@class,' pr-d/groupseq ')]" mode="syntaxdiagram2svg:create-accessible-version">
+        <xsl:param name="prefix" select="''" as="xs:string"/>
+        <xsl:param name="grouplevel" select="'0'"/>
+        <xsl:apply-templates select="." mode="accessible-prefix"><xsl:with-param name="prefix" select="$prefix" as="xs:string"/><xsl:with-param name="grouplevel" select="$grouplevel"/></xsl:apply-templates>
+        <xsl:apply-templates select="*" mode="syntaxdiagram2svg:create-accessible-version">
+            <xsl:with-param name="prefix" select="$prefix" as="xs:string"/>
+            <xsl:with-param name="grouplevel" select="$grouplevel"/>
+        </xsl:apply-templates>
+        <xsl:apply-templates select="following-sibling::*[1]" mode="syntaxdiagram2svg:create-accessible-version">
+            <xsl:with-param name="prefix" select="$prefix" as="xs:string"/>
+            <xsl:with-param name="grouplevel" select="$grouplevel"/>
+        </xsl:apply-templates>
+    </xsl:template>
+    <xsl:template match="*[contains(@class,' pr-d/groupchoice ')]" mode="syntaxdiagram2svg:create-accessible-version">
+      <xsl:param name="prefix" select="''" as="xs:string"/>
+      <xsl:param name="grouplevel" select="''"/>
+      <xsl:variable name="newgrouplevel" select="number($grouplevel) + 1"/>
+      <xsl:apply-templates select="*" mode="syntaxdiagram2svg:create-accessible-version">
+        <!--<xsl:with-param name="prefix" select="if ($prefix='') then ($newgrouplevel) else (concat($prefix,'.',$newgrouplevel))" as="xs:string"/>-->
+          <xsl:with-param name="prefix" as="xs:string">
+              <xsl:choose>
+                  <xsl:when test="parent::wrapper"><xsl:value-of select="$prefix"/></xsl:when>
+                  <xsl:when test="$prefix=''"><xsl:value-of select="$newgrouplevel"/></xsl:when>
+                  <xsl:otherwise><xsl:value-of select="concat($prefix,'.',$newgrouplevel)"/></xsl:otherwise>
+              </xsl:choose>
+          </xsl:with-param>
+          <xsl:with-param name="grouplevel" select="'1'"/>
+      </xsl:apply-templates>
+        <xsl:apply-templates select="following-sibling::*[1]" mode="syntaxdiagram2svg:create-accessible-version">
+            <xsl:with-param name="prefix" select="$prefix" as="xs:string"/>
+            <xsl:with-param name="grouplevel" select="$newgrouplevel"/>
+        </xsl:apply-templates>
+    </xsl:template>
+    
+    <xsl:template match="*[contains(@class,' pr-d/repsep ')]" mode="syntaxdiagram2svg:create-accessible-version">
+        <xsl:param name="prefix" select="''" as="xs:string"/>
+        <xsl:param name="grouplevel" select="'0'"/>
+        <xsl:apply-templates select="." mode="accessible-prefix"><xsl:with-param name="prefix" select="$prefix" as="xs:string"/><xsl:with-param name="grouplevel" select="$grouplevel"/></xsl:apply-templates>
+        <xsl:value-of select="concat($prefix,'+ ',.)"/>
+    </xsl:template>
+    <xsl:template match="*[contains(@class,' pr-d/kwd ')]" mode="syntaxdiagram2svg:create-accessible-version">
+        <xsl:param name="prefix" select="''" as="xs:string"/>
+        <xsl:param name="grouplevel" select="'0'"/>
+        <xsl:apply-templates select="." mode="accessible-prefix"><xsl:with-param name="prefix" select="$prefix" as="xs:string"/><xsl:with-param name="grouplevel" select="$grouplevel"/></xsl:apply-templates>
+        <xsl:value-of select="."/>
+        <!--<xsl:value-of select="$syntaxnewline"/>-->
+    </xsl:template>
+    <xsl:template match="*[contains(@class,' pr-d/delim ')]" mode="syntaxdiagram2svg:create-accessible-version">
+        <xsl:param name="prefix" select="''" as="xs:string"/>
+        <xsl:param name="grouplevel" select="'0'"/>
+        <xsl:apply-templates select="." mode="accessible-prefix"><xsl:with-param name="prefix" select="$prefix" as="xs:string"/><xsl:with-param name="grouplevel" select="$grouplevel"/></xsl:apply-templates>
+        <xsl:value-of select="."/>
+        <!--<xsl:value-of select="$syntaxnewline"/>-->
+    </xsl:template>
+    <xsl:template match="*[contains(@class,' pr-d/oper ')]" mode="syntaxdiagram2svg:create-accessible-version">
+        <xsl:param name="prefix" select="''" as="xs:string"/>
+        <xsl:param name="grouplevel" select="'0'"/>
+        <xsl:apply-templates select="." mode="accessible-prefix"><xsl:with-param name="prefix" select="$prefix" as="xs:string"/><xsl:with-param name="grouplevel" select="$grouplevel"/></xsl:apply-templates>
+        <xsl:value-of select="."/>
+        <!--<xsl:value-of select="$syntaxnewline"/>-->
+    </xsl:template>
+    <xsl:template match="*[contains(@class,' pr-d/sep ')]" mode="syntaxdiagram2svg:create-accessible-version">
+        <xsl:param name="prefix" select="''" as="xs:string"/>
+        <xsl:param name="grouplevel" select="'0'"/>
+        <xsl:apply-templates select="." mode="accessible-prefix"><xsl:with-param name="prefix" select="$prefix" as="xs:string"/><xsl:with-param name="grouplevel" select="$grouplevel"/></xsl:apply-templates>
+        <xsl:value-of select="."/>
+        <!--<xsl:value-of select="$syntaxnewline"/>-->
+    </xsl:template>
+    <xsl:template match="*[contains(@class,' pr-d/var ')]" mode="syntaxdiagram2svg:create-accessible-version">
+        <xsl:param name="prefix" select="''" as="xs:string"/>
+        <xsl:param name="grouplevel" select="'0'"/>
+        <xsl:apply-templates select="." mode="accessible-prefix"><xsl:with-param name="prefix" select="$prefix" as="xs:string"/><xsl:with-param name="grouplevel" select="$grouplevel"/></xsl:apply-templates>
+        <i class="+ topic/ph hi-d/i "><xsl:value-of select="."/></i>
+        <!--<xsl:value-of select="$syntaxnewline"/>-->
+    </xsl:template>
+    <xsl:template match="*[contains(@class,' pr-d/synnote ') or contains(@class,' pr-d/synnoteref ')]" mode="syntaxdiagram2svg:create-accessible-version">
+        <xsl:value-of select="."/>
+    </xsl:template>
+    <xsl:template match="text()" mode="syntaxdiagram2svg:create-accessible-version"/>
 
     <!-- Title for syntaxdiagram. -->
     <xsl:template match="*[contains(@class, &apos; pr-d/syntaxdiagram &apos;)]/*[contains(@class, &apos; topic/title &apos;)]" mode="syntaxdiagram-svgobject:default">

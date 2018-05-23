@@ -104,6 +104,32 @@ g.var > g.text > text { font-style:italic; }
     </xsl:template>
 
 
+    <!-- Mimic logic of mode syntaxdiagram2svg:top-level-walk, but collect the
+         source elements, so that they can be processed to generate accessible content -->
+    <xsl:template match="*" mode="syntaxdiagram2svg:collect-for-a11y">
+        <xsl:apply-templates select="." mode="save-for-a11y"/>
+        <xsl:apply-templates select="following-sibling::*[1]" mode="syntaxdiagram2svg:collect-for-a11y"/>
+    </xsl:template>
+    <xsl:template
+        match="*[contains(@class, ' pr-d/syntaxdiagram ') or contains(@class, ' pr-d/synblk ') or contains(@class, ' pr-d/fragment ')]"
+        mode="syntaxdiagram2svg:collect-for-a11y"/>
+    <xsl:template match="*|@*|text()" mode="save-for-a11y">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|*|text()" mode="save-for-a11y"/>
+        </xsl:copy>
+    </xsl:template>
+    <xsl:template match="*[contains(@class,' pr-d/synnote ')]" mode="save-for-a11y">
+        <xsl:variable name="thisdiagram" select="generate-id(ancestor::*[contains(@class,' pr-d/syntaxdiagram ')])"/>
+        <xsl:copy>
+            <xsl:apply-templates select="@*" mode="save-for-a11y"/>
+            <xsl:choose>
+                <xsl:when test="@callout">(<xsl:value-of select="@callout"/>)</xsl:when>
+                <!-- Originally used position() instead of count(). Resulted in double count, first note was 2, second was 4. --> 
+                <xsl:otherwise>(<xsl:value-of select="number(count(preceding::*[contains(@class,' pr-d/synnote ')][generate-id(ancestor::*[contains(@class,' pr-d/syntaxdiagram ')])=$thisdiagram])+1)"/>)</xsl:otherwise>
+            </xsl:choose>
+        </xsl:copy>
+    </xsl:template>
+    
     <!-- Walk along top-level elements in this part of the syntax diagram. -->
     <xsl:template match="*" mode="syntaxdiagram2svg:top-level-walk">
         <xsl:apply-templates select="." mode="syntaxdiagram2svg:top-level"/>

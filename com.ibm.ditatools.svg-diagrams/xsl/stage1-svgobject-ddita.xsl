@@ -59,6 +59,7 @@
     <xsl:param name="doctype-public" select="'-//W3C//DTD SVG 1.1//EN'"/>
     <xsl:param name="doctype-system" select="'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'"/>
     <xsl:param name="content"/>
+    <xsl:param name="textversion"/>
     <xsl:param name="suffix" select="'.svg'"/>
     <xsl:param name="make-static" select="'no'"/>
     <xsl:param name="alt"><xsl:value-of select="*[contains(@class,' topic/title ')]"/></xsl:param>
@@ -183,6 +184,9 @@
             <xsl:attribute name="dcs:object">syntaxdiagram</xsl:attribute>
             <xsl:attribute name="type">image/svg+xml</xsl:attribute>
             <!--<xsl:copy-of select="$image-element"/>-->
+            <xsl:if test="not(empty($textversion))">
+              <desc class="- topic/desc "><codeblock class="+ topic/pre pr-d/codeblock "><xsl:copy-of select="$textversion"/></codeblock></desc>
+            </xsl:if>
           </object>
         </figgroup>
       </xsl:when>
