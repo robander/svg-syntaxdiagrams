@@ -699,7 +699,8 @@ g.var > g.text > text { font-style:italic; }
 
     <xsl:template match="*[contains(@class, ' pr-d/synnote ')][not(@id)]"
         mode="syntaxdiagram2svg:default">
-        <xsl:if test="parent::*[contains(@class,' pr-d/syntaxdiagram ')] | parent::*[contains(@class,' pr-d/fragment ')] | parent::*[contains(@class, ' pr-d/synblk ')]">
+        <xsl:if test="(parent::*[contains(@class,' pr-d/syntaxdiagram ')] | parent::*[contains(@class,' pr-d/fragment ')] | parent::*[contains(@class, ' pr-d/synblk ')]) or
+            (parent::*[contains(@class,' pr-d/groupseq ') or contains(@class,' pr-d/groupchoice ')] and not(preceding-sibling::*))">
            <xsl:apply-templates select="." mode="syntaxdiagram2svg:note"/>
         </xsl:if>
     </xsl:template>
@@ -741,7 +742,8 @@ g.var > g.text > text { font-style:italic; }
 
     <xsl:template match="*[contains(@class, ' pr-d/synnoteref ')][@href and @href != '']"
         mode="syntaxdiagram2svg:default">
-        <xsl:if test="parent::*[contains(@class,' pr-d/syntaxdiagram ')] | parent::*[contains(@class,' pr-d/fragment ')] | parent::*[contains(@class, ' pr-d/synblk ')]">
+        <xsl:if test="(parent::*[contains(@class,' pr-d/syntaxdiagram ')] | parent::*[contains(@class,' pr-d/fragment ')] | parent::*[contains(@class, ' pr-d/synblk ')]) or
+            (parent::*[contains(@class,' pr-d/groupseq ') or contains(@class,' pr-d/groupchoice ')] and not(preceding-sibling::*))">
             <xsl:apply-templates select="." mode="syntaxdiagram2svg:note"/>
         </xsl:if>
     </xsl:template>
