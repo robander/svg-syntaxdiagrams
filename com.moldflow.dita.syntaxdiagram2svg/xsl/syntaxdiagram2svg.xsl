@@ -697,12 +697,24 @@ g.var > g.text > text { font-style:italic; }
 
     <xsl:template match="*" mode="syntaxdiagram2svg:note-walk"/>
 
-    <xsl:template match="*[contains(@class, ' pr-d/synnote ')][not(@id)]"
+    <xsl:template match="*[contains(@class, ' pr-d/synnote ')][not(@id)] | 
+                         *[contains(@class, ' pr-d/synnoteref ')][@href and @href != '']"
         mode="syntaxdiagram2svg:default">
-        <xsl:if test="(parent::*[contains(@class,' pr-d/syntaxdiagram ')] | parent::*[contains(@class,' pr-d/fragment ')] | parent::*[contains(@class, ' pr-d/synblk ')]) or
+        <xsl:choose>
+           <xsl:when test="parent::*[contains(@class,' pr-d/syntaxdiagram ')] | parent::*[contains(@class,' pr-d/fragment ')] | parent::*[contains(@class, ' pr-d/synblk ')]">
+                <xsl:apply-templates select="." mode="syntaxdiagram2svg:note"/>
+            </xsl:when>
+        <xsl:when test="parent::*[contains(@class,' pr-d/groupseq ') or contains(@class,' pr-d/groupchoice ')]">
+                <xsl:if test="not(preceding-sibling::*[not(self::synnote or self::synnoteref)]) or
+                    (count(preceding-sibling::*[not(self::synnote)])=1 and preceding-sibling::*[not(self::synnote or self::synnoteref)][self::repsep][normalize-space(.)=''])">
+                    <xsl:apply-templates select="." mode="syntaxdiagram2svg:note"/>
+                </xsl:if>
+            </xsl:when>
+        </xsl:choose>
+        <!--<xsl:if test="(parent::*[contains(@class,' pr-d/syntaxdiagram ')] | parent::*[contains(@class,' pr-d/fragment ')] | parent::*[contains(@class, ' pr-d/synblk ')]) or
             (parent::*[contains(@class,' pr-d/groupseq ') or contains(@class,' pr-d/groupchoice ')] and not(preceding-sibling::*))">
            <xsl:apply-templates select="." mode="syntaxdiagram2svg:note"/>
-        </xsl:if>
+        </xsl:if>-->
     </xsl:template>
 
     <xsl:template match="*[contains(@class, ' pr-d/synnote ')][not(@id)]"
@@ -740,13 +752,13 @@ g.var > g.text > text { font-style:italic; }
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="*[contains(@class, ' pr-d/synnoteref ')][@href and @href != '']"
+    <!--<xsl:template match="*[contains(@class, ' pr-d/synnoteref ')][@href and @href != '']"
         mode="syntaxdiagram2svg:default">
         <xsl:if test="(parent::*[contains(@class,' pr-d/syntaxdiagram ')] | parent::*[contains(@class,' pr-d/fragment ')] | parent::*[contains(@class, ' pr-d/synblk ')]) or
             (parent::*[contains(@class,' pr-d/groupseq ') or contains(@class,' pr-d/groupchoice ')] and not(preceding-sibling::*))">
             <xsl:apply-templates select="." mode="syntaxdiagram2svg:note"/>
         </xsl:if>
-    </xsl:template>
+    </xsl:template>-->
 
     <xsl:template match="*[contains(@class, ' pr-d/synnoteref ')][@href and @href != '']"
         mode="syntaxdiagram2svg:note">

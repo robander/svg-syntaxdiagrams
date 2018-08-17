@@ -351,27 +351,24 @@
     <!-- Override fragref processing: XHTML contents as hyperlink. -->
     <xsl:template match="*[contains(@class, &apos; pr-d/fragref &apos;)]" mode="syntaxdiagram2svg:body-only">
         <xsl:param name="role" select="&apos;forward&apos;"></xsl:param>
-        <svg:a syntaxdiagram2svg:dispatch="boxed">
-            <xsl:attribute name="class">
-                <xsl:text>boxed </xsl:text>
-                <xsl:value-of select="local-name()"></xsl:value-of>
-            </xsl:attribute>
-            <xsl:attribute name="syntaxdiagram2svg:element">
-                <xsl:value-of select="local-name()"></xsl:value-of>
-            </xsl:attribute>
-            <xsl:attribute name="syntaxdiagram2svg:role">
-                <xsl:value-of select="$role"></xsl:value-of>
-            </xsl:attribute>
-            <!--<xsl:attribute name="xlink:href">
-                <xsl:call-template name="href"></xsl:call-template>
-            </xsl:attribute>-->
-<!--
-            <xsl:if test="$plus-syntaxdiagram-format = 'svgobject'">
-                <xsl:attribute name="target" select="'_parent'"/>
-            </xsl:if>
--->
-            <xsl:call-template name="syntaxdiagram2svg:box-contents"></xsl:call-template>
-        </svg:a>
+        <xsl:call-template name="syntaxdiagram2svg:append-notes">
+            <xsl:with-param name="contents">
+                <svg:a syntaxdiagram2svg:dispatch="boxed">
+                    <xsl:attribute name="class">
+                        <xsl:text>boxed </xsl:text>
+                        <xsl:value-of select="local-name()"></xsl:value-of>
+                    </xsl:attribute>
+                    <xsl:attribute name="syntaxdiagram2svg:element">
+                        <xsl:value-of select="local-name()"></xsl:value-of>
+                    </xsl:attribute>
+                    <xsl:attribute name="syntaxdiagram2svg:role">
+                        <xsl:value-of select="$role"></xsl:value-of>
+                    </xsl:attribute>
+                    <xsl:call-template name="syntaxdiagram2svg:box-contents"></xsl:call-template>
+                </svg:a>
+                </xsl:with-param>
+            <xsl:with-param name="role" select="$role"/>
+        </xsl:call-template>
     </xsl:template>
 
     <!-- Override fragref processing: XHTML contents as hyperlink. -->
