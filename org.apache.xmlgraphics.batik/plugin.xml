@@ -8,4 +8,5 @@
     <feature extension="dita.conductor.lib.import" file="batik-rasterizer.jar"/>
     <feature extension="dita.conductor.lib.import" file="lib/js.jar"/>
     <feature extension="dita.conductor.lib.import" file="RasterizerTask.jar"/>-->
+    <feature extension="dita.conductor.lib.import" file="lib/js.jar"/>
 </plugin>
