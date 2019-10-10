@@ -15,17 +15,12 @@
   />
 
   <target name="plus-allhtml-svgobject.init">
+    <path id="dost.class.path.svgbatik">
+      <pathelement location="${dita.plugin.com.moldflow.dita.svgobject.dir}/lib/svgrenderingtranscoder.jar"/>
+      <pathelement location="${dita.dir}/lib/dost.jar"/>
+      <pathelement location="${dita.dir}/lib/dost-configuration.jar"/>
+    </path>
 
-  <path id="dost.class.path.svgbatik">
-    <fileset dir="${dita.plugin.batik-1.7.dir}">
-      <include name="*.jar"/>
-      <include name="lib/*.jar"/>
-    </fileset>
-    <pathelement location="${dita.plugin.com.moldflow.dita.svgobject.dir}/lib/svgrenderingtranscoder.jar"/>
-    <pathelement location="${dita.dir}/lib/dost.jar"/>
-    <pathelement location="${dita.dir}/lib/dost-configuration.jar"/>
-  </path>
-  
     <!-- Default HTML output format for SVG objects.
          Choices: raster, object. -->
     <condition property="plus.svgobject.format" value="object">
@@ -75,8 +70,7 @@
 
     <!-- SVG-to-SVG transcoder for making dynamic SVG (with scripts, e.g. syntaxdiagrams) static. -->
     <!-- Pick one of the classes known to be in the jar. -->
-    <available classname="com.moldflow.batik.ant.SVGMakeStatic" property="plus-allhtml-svgobject.svgobject.plugin.available" classpathref="dost.class.path.svgbatik"/>
-
+    <available classname="com.moldflow.batik.ant.SVGMakeStatic" property="plus-allhtml-svgobject.svgobject.plugin.available" classpathref="dost.class.path"/>
     <!-- Should create imagemaps? -->
     <condition property="plus-allhtml-svgobject.make-imagemaps.required">
       <and>
@@ -87,7 +81,7 @@
     <!-- Should convert-to-path stage be skipped? -->
     <condition property="plus-allhtml-svgobject.convert-to-path.required">
       <and>
-      <available classname="com.moldflow.batik.ant.SVGRender" classpathref="dost.class.path.svgbatik"/>
+      <available classname="com.moldflow.batik.ant.SVGRender" classpathref="dost.class.path"/>
         <equals arg1="${plus.svgobject.object.convert-to-path}" arg2="yes"/>
       </and>
     </condition>
@@ -105,22 +99,23 @@
      xmlns:dita="http://dita-ot.sourceforge.net"
      dita:extension="depends org.dita.dost.platform.InsertDependsAction"
     >
-  <condition property="found-batik" value="yes-it-was-found">
-    <available file="${dita.plugin.batik-1.7.dir}/batik.jar"/> 
+
+  <!--<condition property="found.svgtranscoder" value="transcoder.was.found">
+    <available classname="org.apache.batik.transcoder.SVGAbstractTranscoder" classpathref="dost.class.path.svgbatik"/>
   </condition>
+  <echo>DEBUG SVG DIAGRAMS: </echo>
+  <echo>Was transcoder found? ${found.svgtranscoder}</echo>-->
 
-<!--
-  <echo>DEBUG SVG DIAGRAMS: was batik located? ${found-batik}</echo>
--->
+    <taskdef name="svg-make-static" classname="com.moldflow.batik.ant.SVGMakeStatic" classpathref="dost.class.path"/>    
 
-  <taskdef name="svg-make-static" classname="com.moldflow.batik.ant.SVGMakeStatic" classpathref="dost.class.path.svgbatik"/>
-<!--
-<echo>Running task svg-make-static</echo>
--->
+<!--<echo>Running task svg-make-static</echo>-->
+
     <svg-make-static toDir="${dita.temp.dir}">
       <fileset dir="${dita.temp.dir}" includes="**/*_dynamic.svg"/>
       <globmapper from="*_dynamic.svg" to="*.svgrendered"/>
     </svg-make-static>
+
+<!--<echo>Ran task svg-make-static</echo>-->
 
    <!-- <delete>
       <fileset dir="${dita.temp.dir}" includes="**/*_dynamic.svg"/>
@@ -130,9 +125,9 @@
       <fileset dir="${dita.temp.dir}" includes="**/*.svgrendered"/>
       <globmapper from="*.svgrendered" to="*.svg"/>
     </move>
-<!--
-<echo>Finished svg-make-static task</echo>
--->
+
+<!--<echo>Finished svg-make-static task</echo>-->
+
   </target>
 
   <target name="plus-allhtml-svgobject.make-imagemaps"
@@ -146,7 +141,7 @@
 -->
     <xslt processor="trax" basedir="${dita.temp.dir}" 
       destdir="${dita.temp.dir}" style="${plus-allhtml-svgobject.dir}/xsl/svg2imagemap-shell.xsl"
-      classpathref="dost.class.path.svgbatik">
+      classpathref="dost.class.path">
       <fileset dir="${dita.temp.dir}" includes="**/*.svg"/>
       <globmapper from="*.svg" to="*.svg.imagemap"/>
     </xslt>
@@ -162,7 +157,7 @@
      xmlns:dita="http://dita-ot.sourceforge.net"
      dita:extension="depends org.dita.dost.platform.InsertDependsAction"
     >
-  <taskdef name="svg2svg" classname="com.moldflow.batik.ant.SVGRender" classpathref="dost.class.path.svgbatik"/>
+  <taskdef name="svg2svg" classname="com.moldflow.batik.ant.SVGRender" classpathref="dost.class.path"/>
 
     <svg2svg toDir="${dita.temp.dir}">
       <fileset dir="${dita.temp.dir}" includes="**/*_topath.svg"/>
