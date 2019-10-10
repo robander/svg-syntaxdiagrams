@@ -97,10 +97,10 @@ function syntaxdiagram_getDispatchableChildren(g, elementName, className)
   return result;
 }
 
-function syntaxdiagram_arrowHead(x, y, angle)
+function syntaxdiagram_arrowHeadAnnotated(x, y, angle, whicharrow)
 {
   var g = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-  g.setAttribute("class", "arrowhead");
+  g.setAttribute("class", "arrowhead" + whicharrow);
   g.setAttribute("points",
       (x) + "," + (y) + " " +
       (x - syntaxdiagram_Constants.arrow_size) + "," + (y + syntaxdiagram_Constants.arrow_size / 2) + " " +

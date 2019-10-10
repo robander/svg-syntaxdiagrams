@@ -39,7 +39,8 @@ function syntaxdiagram_sequence_init(g)
       medialLine.setAttribute("x2", runningWidth);
       medialLine.setAttribute("y2", 0);
       g.appendChild(medialLine);
-      g.appendChild(syntaxdiagram_arrowHead(runningWidth, 0, 0));
+      //Arrow entering box in sequence group
+      g.appendChild(syntaxdiagram_arrowHeadAnnotated(runningWidth, 0, 0,"Seq"));
     }
   }
 

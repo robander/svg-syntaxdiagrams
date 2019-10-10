@@ -45,7 +45,7 @@ function syntaxdiagram_revdecision_init(g)
     g.appendChild(initialLine);
     if (straightClass != 'void')
     {
-      g.appendChild(syntaxdiagram_arrowHead(runningWidth, 0, 180));
+      g.appendChild(syntaxdiagram_arrowHeadAnnotated(runningWidth, 0, 180,"Rev"));
     }
     runningWidth = runningWidth - straightWidth;
     syntaxdiagram_Dispatch[straightClass]["place"](straight, runningWidth, 0);
@@ -57,7 +57,7 @@ function syntaxdiagram_revdecision_init(g)
     finalLine.setAttribute("x2", runningWidth);
     finalLine.setAttribute("y2", 0);
     g.appendChild(finalLine);
-    g.appendChild(syntaxdiagram_arrowHead(runningWidth + syntaxdiagram_Constants.decision_corner_radius, 0, 180));
+    g.appendChild(syntaxdiagram_arrowHeadAnnotated(runningWidth + syntaxdiagram_Constants.decision_corner_radius, 0, 180,"Rev"));
   }
 
   // Lines above centre.
@@ -90,7 +90,7 @@ function syntaxdiagram_revdecision_init(g)
           "L" + (0 - 2 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_initial - (maxWidth/2) + (upwardWidth/2)) + " " + (0 - newRunningHeightAbove)
         );
       g.appendChild(initialLine);    
-      g.appendChild(syntaxdiagram_arrowHead(0 - 2 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_initial - (maxWidth/2) + (upwardWidth/2), 0 - newRunningHeightAbove, 180));
+      g.appendChild(syntaxdiagram_arrowHeadAnnotated(0 - 2 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_initial - (maxWidth/2) + (upwardWidth/2), 0 - newRunningHeightAbove, 180, "Rev"));
       
       syntaxdiagram_Dispatch[upwardClass]["place"](upwardList[i], 0 - 2 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_initial - (maxWidth/2) - (upwardWidth/2), 0 - newRunningHeightAbove);
       
@@ -104,7 +104,7 @@ function syntaxdiagram_revdecision_init(g)
           "Q" + (0 - 3 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_final - syntaxdiagram_Constants.decision_join_length_initial - maxWidth) + " " + (0) + " " + (0 - 4 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_final - syntaxdiagram_Constants.decision_join_length_initial - maxWidth) + " "+ (0)
         );
       g.appendChild(finalLine);    
-      g.appendChild(syntaxdiagram_arrowHead(0 - 3 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_final - syntaxdiagram_Constants.decision_join_length_initial - maxWidth, 0 - syntaxdiagram_Constants.decision_corner_radius, 90));
+      g.appendChild(syntaxdiagram_arrowHeadAnnotated(0 - 3 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_final - syntaxdiagram_Constants.decision_join_length_initial - maxWidth, 0 - syntaxdiagram_Constants.decision_corner_radius, 90, "Rev"));
       
       runningHeightAbove = newRunningHeightAbove;
       maxHeightAbove = runningHeightAbove + upwardHeightAbove;
@@ -141,7 +141,7 @@ function syntaxdiagram_revdecision_init(g)
           "L" + (0 - 2 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_initial - (maxWidth/2) + (downwardWidth/2)) + " " + (newRunningHeightBelow)
         );
       g.appendChild(initialLine);    
-      g.appendChild(syntaxdiagram_arrowHead(0 - 2 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_initial - (maxWidth/2) + (downwardWidth/2), newRunningHeightBelow, 180));
+      g.appendChild(syntaxdiagram_arrowHeadAnnotated(0 - 2 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_initial - (maxWidth/2) + (downwardWidth/2), newRunningHeightBelow, 180,"Rev"));
       
       syntaxdiagram_Dispatch[downwardClass]["place"](downwardList[i], 0 - 2 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_initial - (maxWidth/2) - (downwardWidth/2), newRunningHeightBelow);
       
@@ -155,7 +155,7 @@ function syntaxdiagram_revdecision_init(g)
           "Q" + (0 - 3 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_final - syntaxdiagram_Constants.decision_join_length_initial - maxWidth) + " " + (0) + " " + (0 - 4 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_final - syntaxdiagram_Constants.decision_join_length_initial - maxWidth) + " "+ (0)
         );
       g.appendChild(finalLine);    
-      g.appendChild(syntaxdiagram_arrowHead(0 - 3 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_final - syntaxdiagram_Constants.decision_join_length_initial - maxWidth, syntaxdiagram_Constants.decision_corner_radius, -90));
+      g.appendChild(syntaxdiagram_arrowHeadAnnotated(0 - 3 * syntaxdiagram_Constants.decision_corner_radius - syntaxdiagram_Constants.decision_join_length_final - syntaxdiagram_Constants.decision_join_length_initial - maxWidth, syntaxdiagram_Constants.decision_corner_radius, -90, "Rev"));
       
       runningHeightBelow = newRunningHeightBelow;
       maxHeightBelow = runningHeightBelow + downwardHeightBelow;

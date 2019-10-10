@@ -73,9 +73,9 @@ function syntaxdiagram_diagram_init(g)
   
   var runningWidth = 0;
   
-  // Initial arrow.
-  g.appendChild(syntaxdiagram_arrowHead(0, overallHeight, 0));
-  g.appendChild(syntaxdiagram_arrowHead(syntaxdiagram_Constants.arrow_size, overallHeight, 0));
+  // Initial arrows.
+  g.appendChild(syntaxdiagram_arrowHeadAnnotated(0, overallHeight, 0, "StartEnd"));
+  g.appendChild(syntaxdiagram_arrowHeadAnnotated(syntaxdiagram_Constants.arrow_size, overallHeight, 0,"StartEnd"));
   var initialLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
   initialLine.setAttribute("class", "arrow");
   initialLine.setAttribute("x1", 0);
@@ -93,12 +93,18 @@ function syntaxdiagram_diagram_init(g)
 
     var rowNumber = children[i].getAttributeNS("http://www.moldflow.com/namespace/2008/syntaxdiagram2svg", "row");
     
+    var nextRowNumber = 0;
+    if (i != children.length - 1) {
+        nextRowNumber = children[i+1].getAttributeNS("http://www.moldflow.com/namespace/2008/syntaxdiagram2svg", "row");
+    }
+    
     if (rowNumber != lastRowNumber)
     {
       runningWidth = syntaxdiagram_Constants.diagram_wrap_indent;
       overallHeight = overallHeight + heightBelow[lastRowNumber] + heightAbove[rowNumber] + syntaxdiagram_Constants.diagram_row_padding;
 
-      g.appendChild(syntaxdiagram_arrowHead(runningWidth, overallHeight, 0));
+      //Start new block of diagram, indented, after previous block
+      g.appendChild(syntaxdiagram_arrowHeadAnnotated(runningWidth, overallHeight, 0,"StartEnd"));
       var medialLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
       medialLine.setAttribute("class", "arrow");
       medialLine.setAttribute("x1", runningWidth);
@@ -123,13 +129,19 @@ function syntaxdiagram_diagram_init(g)
       medialLine.setAttribute("x2", runningWidth);
       medialLine.setAttribute("y2", overallHeight);
       g.appendChild(medialLine);
-      g.appendChild(syntaxdiagram_arrowHead(runningWidth, overallHeight, 0));
+      //Arrow signaling to ontinue to next main child of diagram.
+      //If last item before a line break to next set of groups, use StartEnd, otherwise Seq.
+      if (rowNumber != nextRowNumber) {
+          g.appendChild(syntaxdiagram_arrowHeadAnnotated(runningWidth, overallHeight, 0,"StartEnd"));
+      } else {
+          g.appendChild(syntaxdiagram_arrowHeadAnnotated(runningWidth, overallHeight, 0,"Seq"));
+      }
+      
     }
 
     lastRowNumber = rowNumber;
   }
-  
-  // Final arrow.
+    
   var finalLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
   finalLine.setAttribute("class", "arrow");
   finalLine.setAttribute("x1", runningWidth);
@@ -138,8 +150,9 @@ function syntaxdiagram_diagram_init(g)
   finalLine.setAttribute("x2", runningWidth);
   finalLine.setAttribute("y2", overallHeight);
   g.appendChild(finalLine);
-  g.appendChild(syntaxdiagram_arrowHead(runningWidth, overallHeight, 0));
-  g.appendChild(syntaxdiagram_arrowHead(runningWidth, overallHeight, 180));
+  // Final arrows.
+  g.appendChild(syntaxdiagram_arrowHeadAnnotated(runningWidth, overallHeight, 0,"StartEnd"));
+  g.appendChild(syntaxdiagram_arrowHeadAnnotated(runningWidth, overallHeight, 180,"StartEnd"));
 
   g.setAttributeNS("http://www.moldflow.com/namespace/2008/syntaxdiagram2svg", "syntaxdiagram2svg:width", maxWidth + 2 * syntaxdiagram_Constants.diagram_margin_sides);
   g.setAttributeNS("http://www.moldflow.com/namespace/2008/syntaxdiagram2svg", "syntaxdiagram2svg:heightAbove", 0 + syntaxdiagram_Constants.diagram_margin_topbottom);

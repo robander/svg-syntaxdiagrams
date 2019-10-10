@@ -55,7 +55,8 @@ function syntaxdiagram_loop_init(g)
   initialLine.setAttribute("x2", runningWidth);
   initialLine.setAttribute("y2", 0);
   g.appendChild(initialLine);
-  g.appendChild(syntaxdiagram_arrowHead(runningWidth, 0, 0));
+  //Re-entering a looped box, first item in repeated group, maybe others
+  g.appendChild(syntaxdiagram_arrowHeadAnnotated(runningWidth, 0, 0,"StartRepGroup"));
   
   if (children.length == 1)
   {
@@ -71,7 +72,8 @@ function syntaxdiagram_loop_init(g)
   finalLine.setAttribute("x2", runningWidth);
   finalLine.setAttribute("y2", 0);
   g.appendChild(finalLine);
-  g.appendChild(syntaxdiagram_arrowHead(runningWidth - syntaxdiagram_Constants.loop_corner_radius, 0, 0));
+  //End of repeated group, arrow just before the line up to repeat
+  g.appendChild(syntaxdiagram_arrowHeadAnnotated(runningWidth - syntaxdiagram_Constants.loop_corner_radius, 0, 0,"EndRepGroup"));
 
   g.setAttributeNS("http://www.moldflow.com/namespace/2008/syntaxdiagram2svg", "syntaxdiagram2svg:width", runningWidth);
   
@@ -88,7 +90,7 @@ function syntaxdiagram_loop_init(g)
     );
   g.appendChild(initialReturnLine);
   runningWidth = runningWidth - syntaxdiagram_Constants.loop_corner_radius - syntaxdiagram_Constants.loop_join_length_final - maxWidth/2 + repsepWidth/2;
-  g.appendChild(syntaxdiagram_arrowHead(runningWidth, 0 - returnHeightAbove, 180));
+  g.appendChild(syntaxdiagram_arrowHeadAnnotated(runningWidth, 0 - returnHeightAbove, 180,"RepSep"));
   
   runningWidth = runningWidth - repsepWidth;
   
@@ -116,7 +118,7 @@ function syntaxdiagram_loop_init(g)
   //    (0) + "," + (0)
   //  );
   //g.appendChild(finalReturnLine);
-  g.appendChild(syntaxdiagram_arrowHead(0, 0 - syntaxdiagram_Constants.loop_corner_radius, 90));
+  g.appendChild(syntaxdiagram_arrowHeadAnnotated(0, 0 - syntaxdiagram_Constants.loop_corner_radius, 90,"RepSepReturn"));
   
   g.setAttributeNS("http://www.moldflow.com/namespace/2008/syntaxdiagram2svg", "syntaxdiagram2svg:heightAbove", childHeightAbove + syntaxdiagram_Constants.loop_row_padding + repsepHeightBelow + repsepHeightAbove);
   g.setAttributeNS("http://www.moldflow.com/namespace/2008/syntaxdiagram2svg", "syntaxdiagram2svg:heightBelow", childHeightBelow);

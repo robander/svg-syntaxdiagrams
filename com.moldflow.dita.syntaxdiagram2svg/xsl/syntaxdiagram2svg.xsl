@@ -6,6 +6,26 @@
     
     <xsl:param name="syntaxcss" select="'inline'"/>
 
+    <xsl:param name="plus-syntaxdiagram-arrows" select="'default'"/>
+    <xsl:param name="plus-syntaxdiagram-boxes" select="'default'"/>
+    
+    <xsl:variable name="diagram-internal-arrows">
+        <xsl:text>
+.arrowheadSeq, .arrowheadStartChoice, .arrowheadAfterChoice, .arrowheadStartRepGroup, .arrowheadEndRepGroup, .arrowheadRev </xsl:text>
+        <xsl:choose>
+            <xsl:when test="$plus-syntaxdiagram-arrows='fill'">{ stroke: black; fill: black; }</xsl:when>
+            <xsl:otherwise>{ stroke: none; fill: none; }</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="diagram-boxes-non-fragref">
+        <xsl:text>
+rect </xsl:text>
+        <xsl:choose>
+            <xsl:when test="$plus-syntaxdiagram-boxes='fill'">{ fill: none; stroke: black; }</xsl:when>
+            <xsl:otherwise>{ fill: none; stroke: none; }</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
     <xsl:variable name="syntaxdiagram2svg:css-filename" select="'syntaxdiagram.css'"/>
 
     <xsl:template name="syntaxdiagram2svg:gen-user-scripts">
@@ -49,20 +69,23 @@
             <svg:defs>
                 <svg:style type="text/css">
                     <xsl:text><![CDATA[
-.arrow { fill: none; stroke: black; }
-.arrowhead { stroke: black; fill: black; }
-rect { fill: none; stroke: black; }
+.arrow, .syntaxarrow { fill: none; stroke: black; }
+.arrowheadStartEnd, .arrowheadRepSep, .arrowheadRepSepReturn { stroke: black; fill: black; }]]></xsl:text>
+<xsl:value-of select="$diagram-internal-arrows"/>
+<xsl:value-of select="$diagram-boxes-non-fragref"/>
+<xsl:text><![CDATA[
+rect.fragref,rect.syntaxfragref { fill: none; stroke: black; }
 text {
 fill: #000000;
 fill-opacity: 1;
-font-family: Arial,Helvetica;
+font-family: IBM Plex Sans,Arial Unicode MS,Arial,Helvetica;
 font-style: normal;
 font-weight: normal;
 font-size: 8pt;
 stroke: #000000;
 stroke-width: 0.1;
 }
-g.var > g.text > text { font-style:italic; }
+text.var, text.syntaxvar {font-style:italic;}
 ]]></xsl:text>
                 </svg:style>
             </svg:defs>
@@ -231,8 +254,9 @@ g.var > g.text > text { font-style:italic; }
         <!-- not used <xsl:param name="compact"/> -->
         <xsl:param name="role" select="'forward'"/>
         <xsl:choose>
-            <xsl:when test="@importance = 'optional'">
-                <!-- Optional items must be wrapped in a decision. -->
+            <xsl:when test="@importance = 'optional' and not(parent::*[contains(@class, ' pr-d/groupchoice ')][@importance='optional'])">
+                <!-- Optional items must be wrapped in a decision; if in a groupchoice with importance=optional, already
+                    placed this item above or below the line, don't add another blank line. -->
                 <svg:g class="groupseq" syntaxdiagram2svg:dispatch="decision">
                     <xsl:attribute name="syntaxdiagram2svg:role">
                         <xsl:value-of select="$role"/>
@@ -551,19 +575,38 @@ g.var > g.text > text { font-style:italic; }
         or contains(@class, ' pr-d/sep ')]"
         mode="syntaxdiagram2svg:groupcomp-child">
         <!-- not used <xsl:param name="role" select="'forward'"/> -->
-        <svg:g syntaxdiagram2svg:dispatch="unboxed" syntaxdiagram2svg:role="forward">
-            <xsl:attribute name="class">
-                <xsl:text>unboxed </xsl:text>
-                <xsl:value-of select="local-name()"/>
-            </xsl:attribute>
-            <xsl:attribute name="syntaxdiagram2svg:element">
-                <xsl:value-of select="local-name()"/>
-            </xsl:attribute>
-            <!-- <xsl:attribute name="syntaxdiagram2svg:role">
+        <xsl:if test="not(preceding-sibling::*[1][contains(@class, ' pr-d/kwd ')
+            or contains(@class, ' pr-d/var ')
+            or contains(@class, ' pr-d/delim ')
+            or contains(@class, ' pr-d/oper ')
+            or contains(@class, ' pr-d/sep ')][not(@importance) or @importance='required'])">
+            <svg:g syntaxdiagram2svg:dispatch="unboxed" syntaxdiagram2svg:role="forward">
+                <xsl:attribute name="class">
+                    <xsl:text>unboxed </xsl:text>
+                    <xsl:value-of select="local-name()"/>
+                </xsl:attribute>
+                <xsl:attribute name="syntaxdiagram2svg:element">
+                    <xsl:value-of select="local-name()"/>
+                </xsl:attribute>
+                <!-- <xsl:attribute name="syntaxdiagram2svg:role">
                 <xsl:value-of select="$role"/>
-            </xsl:attribute> -->
-            <xsl:call-template name="syntaxdiagram2svg:box-contents"/>
-        </svg:g>
+                </xsl:attribute> -->
+                <xsl:call-template name="syntaxdiagram2svg:box-contents"/>
+                <xsl:if test="not(@importance) or @importance='required'">
+                    <xsl:apply-templates select="following-sibling::*[1]" mode="syntaxdiagram2svg:merge-into-groupcomp"/>
+                </xsl:if>
+            </svg:g>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template match="*" mode="syntaxdiagram2svg:merge-into-groupcomp"/>
+    <xsl:template match="*[contains(@class, ' pr-d/kwd ')
+        or contains(@class, ' pr-d/var ')
+        or contains(@class, ' pr-d/delim ')
+        or contains(@class, ' pr-d/oper ')
+        or contains(@class, ' pr-d/sep ')][not(@importance) or @importance='required']" mode="syntaxdiagram2svg:merge-into-groupcomp">
+        <xsl:call-template name="syntaxdiagram2svg:box-contents"/>
+        <xsl:apply-templates select="following-sibling::*[1]" mode="syntaxdiagram2svg:merge-into-groupcomp"/>
     </xsl:template>
 
     <!-- Generate text for contents of terminals. -->
@@ -592,13 +635,58 @@ g.var > g.text > text { font-style:italic; }
     <!-- Text inside a box. -->
     <xsl:template match="text()" mode="syntaxdiagram2svg:box-contents">
         <xsl:choose>
-            <xsl:when test="normalize-space(.)='&#xA0;'">
+            <xsl:when test="normalize-space(.)='&#xA0;'
+                or ((string-length(.) &gt; 0) and normalize-space(.)='')">
               <!-- Standalone non breaking space breaks rendering code that follows; treat equivalent to normal space -->
+            <!-- Update: fixed in JS to create blank box -->
+                <svg:g class="text" syntaxdiagram2svg:dispatch="text">
+                    <svg:text class="{name(parent::*)}">&#xA0;</svg:text>
+                </svg:g>
             </xsl:when>
             <xsl:when test="normalize-space(.)">
                 <svg:g class="text" syntaxdiagram2svg:dispatch="text">
-                    <svg:text>
-                        <xsl:value-of select="."/>
+                    <svg:text class="{name(parent::*)}">
+                        <!-- JS Rhino code that sets width based on characters returns too-short values for these characters.
+                                     Extend the width slightly to avoid compressed text. -->
+                        <xsl:if test="starts-with(.,' ') or starts-with(.,'&#xA0;')">
+                            <xsl:attribute name="syntaxdiagram2svg:extendwidth">4</xsl:attribute>
+                        </xsl:if>
+                        <xsl:choose>
+                            <!-- Special handling for var in composite group: seems to drop leading space, start and end compress too
+                                closely with previous/next (unless ending space is included) -->
+                            <xsl:when test="parent::*[contains(@class,' pr-d/var ')][not(@importance='default' or @importance='optional')] and
+                                 parent::*/parent::*[contains(@class,' pr-d/groupcomp ')]">
+                                <xsl:choose>
+                                    <!-- Replace leading full space with nbsp -->
+                                    <xsl:when test="starts-with(.,' ')">
+                                        <!--<xsl:text>&#xA0;</xsl:text>-->
+                                        <xsl:value-of select="concat('&#xA0;',substring(.,2))"/>
+                                    </xsl:when>
+                                    <!-- If previous is VAR or if we start with NBSP already, leave alone -->
+                                    <xsl:when test="parent::*/preceding-sibling::*[1][contains(@class,' pr-d/var ')] or starts-with(.,'&#xA0;')">
+                                        <xsl:value-of select="."/>
+                                    </xsl:when>
+                                    <!-- Otherwise if concatenated with previous, add thin space for extra spacing -->
+                                    <xsl:when test="parent::*/preceding-sibling::*[1]">
+                                        <xsl:attribute name="syntaxdiagram2svg:extendwidth">2</xsl:attribute>
+                                        <!--<xsl:text>&#x2009;</xsl:text>-->
+                                        <xsl:value-of select="concat('&#x2009;',.)"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="."/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:when>
+                            <xsl:when test="starts-with(.,' ')">
+                                <!-- Replace leading space with NBSP, otherwise it may be ignored by rendering + not counted in width -->
+                                <xsl:text>&#xA0;</xsl:text>
+                                <xsl:value-of select="substring(.,2)"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="."/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                        
                     </svg:text>
                 </svg:g>
             </xsl:when>
@@ -711,7 +799,7 @@ g.var > g.text > text { font-style:italic; }
                 </xsl:if>
             </xsl:when>
         </xsl:choose>
-        <!--<xsl:if test="(parent::*[contains(@class,' pr-d/syntaxdiagram ')] | parent::*[contains(@class,' pr-d/fragment ')] | parent::*[contains(@class, ' pr-d/synblk ')]) or
+    <!--<xsl:if test="(parent::*[contains(@class,' pr-d/syntaxdiagram ')] | parent::*[contains(@class,' pr-d/fragment ')] | parent::*[contains(@class, ' pr-d/synblk ')]) or
             (parent::*[contains(@class,' pr-d/groupseq ') or contains(@class,' pr-d/groupchoice ')] and not(preceding-sibling::*))">
            <xsl:apply-templates select="." mode="syntaxdiagram2svg:note"/>
         </xsl:if>-->
