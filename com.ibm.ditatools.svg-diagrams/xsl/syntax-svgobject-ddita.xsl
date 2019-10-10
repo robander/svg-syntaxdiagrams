@@ -52,7 +52,9 @@
                     <wrapper><xsl:apply-templates mode="collect-synnotes"/></wrapper>
                 </xsl:variable>
                 <figgroup class="- topic/figgroup ">
+                    <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
                     <title class="- topic/title ">
+                        <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
                         <xsl:call-template name="getVariable">
                             <xsl:with-param name="id" select="'Notes'"/>
                         </xsl:call-template>
@@ -60,7 +62,9 @@
                             <xsl:with-param name="id" select="'ColonSymbol'"/>
                         </xsl:call-template>
                     </title>
-                    <sl class="- topic/sl "><xsl:apply-templates select="$collectnotes" mode="synnote-list"/></sl>
+                    <sl class="- topic/sl ">
+                        <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
+                        <xsl:apply-templates select="$collectnotes" mode="synnote-list"/></sl>
                 </figgroup>
             </xsl:if>
         </fig>
@@ -86,6 +90,7 @@
     
     <xsl:template match="*[contains(@class,' pr-d/synnote ')]" mode="synnote-list">
         <sli class="- topic/sli ">
+            <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
             <xsl:choose>
                 <xsl:when test="@callout"><sup class="+ topic/ph hi-d/sup "><xsl:value-of select="@callout"/></sup></xsl:when>
                 <!-- Originally used position() instead of count(). Resulted in double count, first note was 2, second was 4. --> 
@@ -98,6 +103,7 @@
 
     <xsl:template match="*[contains(@class, &apos; pr-d/synblk &apos;)]" mode="syntaxdiagram-svgobject:default">
         <figgroup class="- topic/figgroup " outputclass="synblk">
+            <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
             <!--<xsl:attribute name="class">synblk</xsl:attribute>
             <xsl:call-template name="commonattributes"></xsl:call-template>
             <xsl:call-template name="setidaname"></xsl:call-template>
@@ -108,6 +114,7 @@
 
     <xsl:template match="*[contains(@class, &apos; pr-d/fragment &apos;)]" mode="syntaxdiagram-svgobject:default">
         <figgroup class="- topic/figgroup " outputclass="fragment">
+            <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
             <!--<xsl:attribute name="class">fragment</xsl:attribute>
             <xsl:call-template name="commonattributes"></xsl:call-template>
             <xsl:call-template name="setidaname"></xsl:call-template>
@@ -127,6 +134,7 @@
                 <xsl:when test="count(preceding-sibling::*) = 0 or                     preceding-sibling::*[1][                     contains(@class, &apos; topic/title &apos;)                     or contains(@class, &apos; pr-d/syntaxdiagram &apos;)                     or contains(@class, &apos; pr-d/synblk &apos;)                     or contains(@class, &apos; pr-d/fragment &apos;)]">
                     <!-- Other elements start a syntax diagram. -->
                     <figgroup class="- topic/figgroup " outputclass="syntaxdiagram-piece">
+                        <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
                         <xsl:variable name="syntax-pieces" as="element()">
                             <!-- Collects pieces that will be in this fragment, for evaluation in accessible portion -->
                             <wrapper><xsl:apply-templates select="." mode="syntaxdiagram2svg:collect-for-a11y"/></wrapper>
@@ -318,6 +326,7 @@
     <!-- Title for syntaxdiagram. -->
     <xsl:template match="*[contains(@class, &apos; pr-d/syntaxdiagram &apos;)]/*[contains(@class, &apos; topic/title &apos;)]" mode="syntaxdiagram-svgobject:default">
         <title class="- topic/title " outputclass="syntaxdiagram-title">
+            <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
             <!--<xsl:attribute name="class">syntaxdiagram-title</xsl:attribute>
             <xsl:call-template name="commonattributes"></xsl:call-template>
             <xsl:call-template name="setidaname"></xsl:call-template>
@@ -329,6 +338,7 @@
     <!-- Title for synblk. -->
     <xsl:template match="*[contains(@class, &apos; pr-d/synblk &apos;)]/*[contains(@class, &apos; topic/title &apos;)]" mode="syntaxdiagram-svgobject:default">
         <title class="- topic/title " outputclass="synblk-title">
+            <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
             <!--<xsl:attribute name="class">synblk-title</xsl:attribute>
             <xsl:call-template name="commonattributes"></xsl:call-template>
             <xsl:call-template name="setidaname"></xsl:call-template>
@@ -340,6 +350,7 @@
     <!-- Title for fragment. -->
     <xsl:template match="*[contains(@class, &apos; pr-d/fragment &apos;)]/*[contains(@class, &apos; topic/title &apos;)]" mode="syntaxdiagram-svgobject:default">
         <title class="- topic/title " outputclass="fragment-title">
+            <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
             <!--<xsl:attribute name="class">fragment-title</xsl:attribute>
             <xsl:call-template name="commonattributes"></xsl:call-template>
             <xsl:call-template name="setidaname"></xsl:call-template>
