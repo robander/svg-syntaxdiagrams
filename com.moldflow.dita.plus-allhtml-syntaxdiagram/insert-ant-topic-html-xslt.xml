@@ -1,7 +1,7 @@
-<xslt>
+<xslt xmlns:if="ant:if"
+      xmlns:unless="ant:unless">
 
       <!-- Syntax Diagram parameters. -->
-      <param name="plus-syntaxdiagram-format" expression="${plus.syntaxdiagram.format}" if="plus.syntaxdiagram.format"/>
-
+      <param name="plus-syntaxdiagram-format" expression="${plus.syntaxdiagram.format}" if:set="plus.syntaxdiagram.format"/>
 
 </xslt>

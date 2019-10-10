@@ -315,7 +315,7 @@
   </target>
 
   <target name="plus-allhtml-svgobject.copy-files.css.to-output" depends="plus-allhtml-svgobject.copy-files.css.to-output.check" if="plus-allhtml-svgobject.copy-files.css.to-output.required">
-    <condition property="syntax.diagram.css.output.directory" value="${output.dir}/${csspath}">
+    <condition property="syntax.diagram.css.output.directory" value="${dita.output.dir}/${csspath}">
       <not><isset property="syntax.diagram.css.output.directory"/></not>
     </condition>
     <copy todir="${syntax.diagram.css.output.directory}">
@@ -339,7 +339,7 @@
   </target>
 
   <target name="plus-allhtml-svgobject.copy-files.js.to-output" depends="plus-allhtml-svgobject.copy-files.js.to-output.check" if="plus-allhtml-svgobject.copy-files.js.to-output.required">
-    <copy todir="${output.dir}/${jspath}">
+    <copy todir="${dita.output.dir}/${jspath}">
       <fileset refid="fileset"/>
     </copy>
   </target>
@@ -351,7 +351,7 @@
   </target>
 
   <target name="plus-allhtml-svgobject.gen-file.js.to-output" depends="plus-allhtml-svgobject.copy-files.js.to-output.check" if="plus-allhtml-svgobject.copy-files.js.to-output.required">
-    <xslt style="${style}" in="${in}" out="${output.dir}/${jspath}/${out}"/>
+    <xslt style="${style}" in="${in}" out="${dita.output.dir}/${jspath}/${out}"/>
   </target>
 
 </project>
