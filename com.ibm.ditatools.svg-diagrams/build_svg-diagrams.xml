@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:dita="http://dita-ot.sourceforge.net" name="svg-syntax-as-preprocess-step">
+<project xmlns:dita="http://dita-ot.sourceforge.net" name="svg-syntax-as-preprocess-step"
+  xmlns:if="ant:if"
+  xmlns:unless="ant:unless">
 
   <target name="svg-syntax-as-preprocess-step" depends="svg-syntax-as-preprocess-step.init, svg-syntax-as-preprocess-step.run">
       
@@ -51,25 +53,26 @@
     <pipeline message="Diagrams to SVG" taskname="svgdiagrams">
       <xslt basedir="${dita.temp.dir}" 
             reloadstylesheet="${dita.preprocess.reloadstylesheet.svgdiagrams}" 
+            filenameparameter="FILENAME"
             style="${dita.plugin.com.ibm.ditatools.svg-diagrams.dir}/xsl/stage1-ddita-shell.xsl">
-        <includesfile name="${dita.temp.dir}/${fullditatopicfile}"/>
-        <param name="CSS" expression="${args.css.file}" if="args.css.file"/>
-        <param name="CSSPATH" expression="${user.csspath}" if="user.csspath"/>
-        <param name="OUTEXT" expression="${out.ext}" if="out.ext"/>
-        <param name="plus-temp-directory" expression="${plus.map.temp.dir.url}" if="plus.map.temp.dir.url"/>
+        <ditafileset format="dita" processingRole="normal"/>
+        <param name="CSS" expression="${args.css.file}" if:set="args.css.file"/>
+        <param name="CSSPATH" expression="${user.csspath}" if:set="user.csspath"/>
+        <param name="OUTEXT" expression="${out.ext}" if:set="out.ext"/>
+        <param name="plus-temp-directory" expression="${plus.map.temp.dir.url}" if:set="plus.map.temp.dir.url"/>
 
-        <param name="plus-svgobject-format" expression="${plus.svgobject.format}" if="plus.svgobject.format"/>
-        <param name="plus-svgobject-raster-mimetype" expression="${plus.svgobject.raster.mimetype}" if="plus.svgobject.raster.mimetype"/>
-        <param name="plus-svgobject-object-convert-to-path" expression="${plus.svgobject.object.convert-to-path}" if="plus.svgobject.object.convert-to-path"/>
-        <param name="plus-svgobject-raster-imagemap" expression="${plus.svgobject.raster.imagemap}" if="plus.svgobject.raster.imagemap"/>
-        <param name="plus-svgobject-path" expression="${plus.svgobject.path}" if="plus.svgobject.path"/>
-        <param name="plus-syntaxdiagram-format" expression="${plus.syntaxdiagram.format}" if="plus.syntaxdiagram.format"/>
-        <param name="plus-allhtml-syntaxdiagram-svginline-csspath" expression="${plus-allhtml-syntaxdiagram-svginline.csspath}" if="plus-allhtml-syntaxdiagram-svginline.csspath"/>
-        <param name="plus-allhtml-syntaxdiagram-svginline-jspath" expression="${plus-allhtml-syntaxdiagram-svginline.jspath}" if="plus-allhtml-syntaxdiagram-svginline.jspath"/>
-        <param name="plus-allhtml-syntaxdiagram-svgobject-csspath" expression="${plus-allhtml-syntaxdiagram-svgobject.csspath}" if="plus-allhtml-syntaxdiagram-svgobject.csspath"/>
-        <param name="plus-allhtml-syntaxdiagram-svgobject-jspath" expression="${plus-allhtml-syntaxdiagram-svgobject.jspath}" if="plus-allhtml-syntaxdiagram-svgobject.jspath"/>
-        <param name="input.map.url" expression="${html5.map.url}" if="html5.map.url"/> 
-        <param name="nav-toc" expression="${html5.nav-toc}" if="html5.nav-toc"/>
+        <param name="plus-svgobject-format" expression="${plus.svgobject.format}" if:set="plus.svgobject.format"/>
+        <param name="plus-svgobject-raster-mimetype" expression="${plus.svgobject.raster.mimetype}" if:set="plus.svgobject.raster.mimetype"/>
+        <param name="plus-svgobject-object-convert-to-path" expression="${plus.svgobject.object.convert-to-path}" if:set="plus.svgobject.object.convert-to-path"/>
+        <param name="plus-svgobject-raster-imagemap" expression="${plus.svgobject.raster.imagemap}" if:set="plus.svgobject.raster.imagemap"/>
+        <param name="plus-svgobject-path" expression="${plus.svgobject.path}" if:set="plus.svgobject.path"/>
+        <param name="plus-syntaxdiagram-format" expression="${plus.syntaxdiagram.format}" if:set="plus.syntaxdiagram.format"/>
+        <param name="plus-allhtml-syntaxdiagram-svginline-csspath" expression="${plus-allhtml-syntaxdiagram-svginline.csspath}" if:set="plus-allhtml-syntaxdiagram-svginline.csspath"/>
+        <param name="plus-allhtml-syntaxdiagram-svginline-jspath" expression="${plus-allhtml-syntaxdiagram-svginline.jspath}" if:set="plus-allhtml-syntaxdiagram-svginline.jspath"/>
+        <param name="plus-allhtml-syntaxdiagram-svgobject-csspath" expression="${plus-allhtml-syntaxdiagram-svgobject.csspath}" if:set="plus-allhtml-syntaxdiagram-svgobject.csspath"/>
+        <param name="plus-allhtml-syntaxdiagram-svgobject-jspath" expression="${plus-allhtml-syntaxdiagram-svgobject.jspath}" if:set="plus-allhtml-syntaxdiagram-svgobject.jspath"/>
+        <param name="input.map.url" expression="${html5.map.url}" if:set="html5.map.url"/> 
+        <param name="nav-toc" expression="${html5.nav-toc}" if:set="html5.nav-toc"/>
 
         <xmlcatalog refid="dita.catalog"/>
       </xslt>
