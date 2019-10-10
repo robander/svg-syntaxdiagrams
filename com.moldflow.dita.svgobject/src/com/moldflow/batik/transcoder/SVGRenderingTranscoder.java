@@ -14,7 +14,7 @@ import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscodingHints;
 import org.apache.batik.transcoder.keys.BooleanKey;
-import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.anim.dom.SVGDOMImplementation;
 import org.apache.batik.util.SVGConstants;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.svggen.SVGGeneratorContext;
