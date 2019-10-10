@@ -3,7 +3,7 @@
   xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:svgobject="http://www.moldflow.com/namespace/2008/dita/svgobject"
   xmlns:hash="com.moldflow.xslt.hash"
-  xmlns:dcs="com.ibm.ditatools.dcs"
+  xmlns:dcs="http://rtpdoc01.rtp.raleigh.ibm.com:9082/kc/dcs"
   exclude-result-prefixes="hash">
   
   <xsl:param name="plus-svgobject-format" select="'object'"/>
@@ -189,6 +189,13 @@
             </xsl:attribute>
             <xsl:attribute name="dcs:alt"><xsl:value-of select="$alt"/></xsl:attribute>
             <xsl:attribute name="dcs:object">syntaxdiagram</xsl:attribute>
+            <xsl:attribute name="dcs:accessible">
+              <xsl:value-of select="if (contains($FILENAME,'.dita'))
+                then (substring-before($FILENAME,'.dita'))
+                else ($FILENAME)"/>
+              <xsl:text>_syn</xsl:text>
+              <xsl:value-of select="generate-id(.)"/>
+            </xsl:attribute>
             <xsl:attribute name="type">image/svg+xml</xsl:attribute>
             <!--<xsl:copy-of select="$image-element"/>-->
             <xsl:if test="not(empty($textversion))">
