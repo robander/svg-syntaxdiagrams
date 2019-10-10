@@ -3,7 +3,8 @@
     
 <xsl:param name="OUTEXT"></xsl:param>
 <xsl:param name="PATH2PROJ">
-<xsl:apply-templates select="/processing-instruction('path2project')[1]" mode="get-path2project"/>
+  <!-- Diagrams are all generated in svgobject/ relative to map, so we actually want path to map to fix the path from here to svgobject/ -->
+  <xsl:value-of select="/processing-instruction()[name()='path2rootmap-uri'][1]"/>
 </xsl:param>
 <xsl:param name="msgprefix">meep</xsl:param>
 
