@@ -9,6 +9,9 @@
     <scalar name="box_padding_vertical">4</scalar>
     <scalar name="box_padding_horizontal">4</scalar>
     
+    <!-- Factor by which to increase text space to allow for font expansion -->
+    <scalar name="text_expansion_multiplier">1.05</scalar>
+    
     <!-- Corner radius for boxes, per element. -->
     <array name="box_corner_radius">
         <scalar name="kwd">3</scalar>

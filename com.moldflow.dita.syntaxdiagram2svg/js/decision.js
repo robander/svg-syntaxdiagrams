@@ -45,7 +45,8 @@ function syntaxdiagram_decision_init(g)
     g.appendChild(initialLine);
     if (straightClass != 'void')  // Otherwise arrow density is a bit much.
     {
-      g.appendChild(syntaxdiagram_arrowHead(runningWidth, 0, 0));
+      //into main line box in choice group, possibly others
+      g.appendChild(syntaxdiagram_arrowHeadAnnotated(runningWidth, 0, 0, "StartChoice"));
     }
     syntaxdiagram_Dispatch[straightClass]["place"](straight, runningWidth,0);
     runningWidth = runningWidth + straightWidth;
@@ -57,7 +58,8 @@ function syntaxdiagram_decision_init(g)
     finalLine.setAttribute("x2", runningWidth);
     finalLine.setAttribute("y2", 0);
     g.appendChild(finalLine);
-    g.appendChild(syntaxdiagram_arrowHead(runningWidth - syntaxdiagram_Constants.decision_corner_radius, 0, 0));
+    //Coming out of main line choice group, as choices come back together
+    g.appendChild(syntaxdiagram_arrowHeadAnnotated(runningWidth - syntaxdiagram_Constants.decision_corner_radius, 0, 0, "AfterChoice"));
   }
 
   // Lines above centre.
@@ -89,8 +91,9 @@ function syntaxdiagram_decision_init(g)
           "Q" + (syntaxdiagram_Constants.decision_corner_radius) + " " + (0 - newRunningHeightAbove) + " " + (syntaxdiagram_Constants.decision_corner_radius * 2) + " "+ (0 - newRunningHeightAbove) + " " + 
           "L" + (2 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_initial + (maxWidth/2) - (upwardWidth/2)) + " " + (0 - newRunningHeightAbove)
         );
-      g.appendChild(initialLine);    
-      g.appendChild(syntaxdiagram_arrowHead(2 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_initial + (maxWidth/2) - (upwardWidth/2), 0 - newRunningHeightAbove, 0));
+      g.appendChild(initialLine);
+      //Arrow entering above-the-line default in choice group
+      g.appendChild(syntaxdiagram_arrowHeadAnnotated(2 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_initial + (maxWidth/2) - (upwardWidth/2), 0 - newRunningHeightAbove, 0, "StartChoice"));
       
       syntaxdiagram_Dispatch[upwardClass]["place"](upwardList[i], 2 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_initial + (maxWidth/2) - (upwardWidth/2), 0 - newRunningHeightAbove);
       
@@ -103,8 +106,9 @@ function syntaxdiagram_decision_init(g)
           "L" + (3 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_final + syntaxdiagram_Constants.decision_join_length_initial + maxWidth) + " " + (0 - syntaxdiagram_Constants.decision_corner_radius) + " " + 
           "Q" + (3 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_final + syntaxdiagram_Constants.decision_join_length_initial + maxWidth) + " " + (0) + " " + (4 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_final + syntaxdiagram_Constants.decision_join_length_initial + maxWidth) + " "+ (0)
         );
-      g.appendChild(finalLine);    
-      g.appendChild(syntaxdiagram_arrowHead(3 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_final + syntaxdiagram_Constants.decision_join_length_initial + maxWidth, 0 - syntaxdiagram_Constants.decision_corner_radius, 90));
+      g.appendChild(finalLine);
+      //Arrow pointind down, returning above-the-line default back to main line
+      g.appendChild(syntaxdiagram_arrowHeadAnnotated(3 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_final + syntaxdiagram_Constants.decision_join_length_initial + maxWidth, 0 - syntaxdiagram_Constants.decision_corner_radius, 90, "AfterChoice"));
       
       runningHeightAbove = newRunningHeightAbove;
       maxHeightAbove = runningHeightAbove + upwardHeightAbove;
@@ -140,8 +144,9 @@ function syntaxdiagram_decision_init(g)
           "Q" + (syntaxdiagram_Constants.decision_corner_radius) + " " + (newRunningHeightBelow) + " " + (syntaxdiagram_Constants.decision_corner_radius * 2) + " "+ (newRunningHeightBelow) + " " + 
           "L" + (2 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_initial + (maxWidth/2) - (downwardWidth/2)) + " " + (newRunningHeightBelow)
         );
-      g.appendChild(initialLine);    
-      g.appendChild(syntaxdiagram_arrowHead(2 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_initial + (maxWidth/2) - (downwardWidth/2), newRunningHeightBelow, 0));
+      g.appendChild(initialLine);
+      //Entering a choice below the main line in a choice group, maybe others
+      g.appendChild(syntaxdiagram_arrowHeadAnnotated(2 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_initial + (maxWidth/2) - (downwardWidth/2), newRunningHeightBelow, 0, "StartChoice"));
       
       syntaxdiagram_Dispatch[downwardClass]["place"](downwardList[i], 2 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_initial + (maxWidth/2) - (downwardWidth/2), newRunningHeightBelow);
       
@@ -154,8 +159,9 @@ function syntaxdiagram_decision_init(g)
           "L" + (3 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_final + syntaxdiagram_Constants.decision_join_length_initial + maxWidth) + " " + (syntaxdiagram_Constants.decision_corner_radius) + " " + 
           "Q" + (3 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_final + syntaxdiagram_Constants.decision_join_length_initial + maxWidth) + " " + (0) + " " + (4 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_final + syntaxdiagram_Constants.decision_join_length_initial + maxWidth) + " "+ (0)
         );
-      g.appendChild(finalLine);    
-      g.appendChild(syntaxdiagram_arrowHead(3 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_final + syntaxdiagram_Constants.decision_join_length_initial + maxWidth, syntaxdiagram_Constants.decision_corner_radius, -90));
+      g.appendChild(finalLine); 
+      //Below-the-line choices in choice group, arrow points up on line joining each choice back into main line
+      g.appendChild(syntaxdiagram_arrowHeadAnnotated(3 * syntaxdiagram_Constants.decision_corner_radius + syntaxdiagram_Constants.decision_join_length_final + syntaxdiagram_Constants.decision_join_length_initial + maxWidth, syntaxdiagram_Constants.decision_corner_radius, -90, "AfterChoice"));
       
       runningHeightBelow = newRunningHeightBelow;
       maxHeightBelow = runningHeightBelow + downwardHeightBelow;
