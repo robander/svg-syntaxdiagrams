@@ -79,7 +79,9 @@
     </xsl:template>
     <xsl:template match="*[contains(@class,' pr-d/synnoteref ')]" mode="collect-synnotes">
         <xsl:variable name="noteid" select="substring-after(@href,'/')"/>
-        <xsl:if test="generate-id(.)=generate-id((ancestor::*[contains(@class,' pr-d/syntaxdiagram ')]//*[contains(@class,' pr-d/synnoteref ')][contains(@href,concat('/',$noteid))])[1])">
+        <xsl:if test="generate-id(.)=
+            generate-id((ancestor::*[contains(@class,' pr-d/syntaxdiagram ')]//*[contains(@class,' pr-d/synnoteref ')]
+                                [substring-after(@href,'/') = $noteid])[1])">
             <xsl:copy-of select="ancestor::*[contains(@class,' pr-d/syntaxdiagram ')]//*[contains(@class,' pr-d/synnote ')][@id=$noteid]"/>
         </xsl:if>
     </xsl:template>
