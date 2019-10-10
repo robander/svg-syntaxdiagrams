@@ -8,7 +8,7 @@ xmlns:opentopic-func="http://www.idiominc.com/opentopic/exsl/function"
 xmlns:dita2xslfo="http://dita-ot.sourceforge.net/ns/200910/dita2xslfo"
 xmlns:ot-placeholder="http://suite-sol.com/namespaces/ot-placeholder"
 xmlns:svgobject="http://www.moldflow.com/namespace/2008/dita/svgobject"
-xmlns:dcs="com.ibm.ditatools.dcs"
+xmlns:dcs="http://rtpdoc01.rtp.raleigh.ibm.com:9082/kc/dcs"
 exclude-result-prefixes="ot-placeholder opentopic opentopic-index opentopic-func dita2xslfo xs svgobject dcs"
 version="2.0">
 
@@ -38,6 +38,7 @@ width: <xsl:value-of select="$imageWidth"/>
 
 <xsl:variable name="scaleimage">
 <image class="- topic/image " href="{@dcs:pathfrommap}" outputclass="syntax-svg">
+<xsl:copy-of select="@scale"/>
 <xsl:if test="number($imageWidth) &gt; 525 or number($imageHeight) &gt; 700">
 <xsl:attribute name="scalefit">yes</xsl:attribute>
 </xsl:if>
