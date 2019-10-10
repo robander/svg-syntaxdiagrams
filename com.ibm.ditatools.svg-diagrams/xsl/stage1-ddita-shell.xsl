@@ -10,13 +10,16 @@
 <!--<xsl:import href="../../com.moldflow.dita.plus-allhtml-svgobject/xsl/stage1.xsl"/>
 <xsl:import href="../../com.moldflow.dita.plus-allhtml-syntaxdiagram-svgobject/xsl/ddita.xsl"/>-->
     
+    <xsl:param name="FILENAME"/>
+    
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="//*[contains(@class,' pr-d/synnoteref ')] | 
-                            //*[contains(@class,' pr-d/groupseq ') or contains(@class,' pr-d/groupcomp ') or contains(@class,' pr-d/groupchoice ')]/*[contains(@class,' topic/title ')]">
+                            //*[contains(@class,' pr-d/groupseq ') or contains(@class,' pr-d/groupcomp ') or contains(@class,' pr-d/groupchoice ')]/*[contains(@class,' topic/title ')] |
+                            //*[contains(@class,' pr-d/groupcomp ')]/*[contains(@class,' pr-d/kwd ') or contains(@class,' pr-d/oper ') or contains(@class,' pr-d/sep ') or contains(@class,' pr-d/delim ')][not(@importance) or @importance='required'][2]">
                 <xsl:variable name="updatedoc" as="document-node()">
                     <xsl:document>
-                        <xsl:apply-templates select="/*" mode="convert-title-group-to-fragment">
+                        <xsl:apply-templates select="/*|/processing-instruction()" mode="convert-title-group-to-fragment">
                             <xsl:with-param name="synnotes" as="element()"><startnode/></xsl:with-param>
                         </xsl:apply-templates>
                     </xsl:document>
@@ -24,7 +27,7 @@
                 
                 <!--<xsl:result-document href="file:/c:/dcs/2.3.1/temp/syntest{generate-id(/*)}.xml">
                     <xsl:copy-of select="$updatedoc"/></xsl:result-document>-->
-                <xsl:apply-templates select="$updatedoc/*"/>
+                <xsl:apply-templates select="/processing-instruction() | $updatedoc/*"/>
             </xsl:when>
             <xsl:otherwise>
                 <!--<xsl:result-document href="file:/c:/dcs/2.3.1/temp/syntest.xml">
@@ -34,10 +37,10 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="@*|*|text()" mode="convert-title-group-to-fragment">
+    <xsl:template match="@*|*|text()|processing-instruction()" mode="convert-title-group-to-fragment">
         <xsl:param name="synnotes" as="element()?"/>
         <xsl:copy>
-            <xsl:apply-templates select="@*|text()|*" mode="convert-title-group-to-fragment">
+            <xsl:apply-templates select="@*|text()|*|processing-instruction()" mode="convert-title-group-to-fragment">
                 <xsl:with-param name="synnotes" select="$synnotes"/>
             </xsl:apply-templates>
         </xsl:copy>
@@ -82,7 +85,7 @@
             <xsl:choose>
                 <xsl:when test="$synnotes/*[@id=$noteid][@callout]"><xsl:value-of select="$synnotes/*[@id=$noteid][@callout]"/></xsl:when>
                 <xsl:when test="$synnotes/*[@id=$noteid]"><xsl:value-of select="count($synnotes/*[@id=$noteid][1]/preceding-sibling::*)+1"/></xsl:when>
-                <xsl:otherwise>C<xsl:value-of select="."/></xsl:otherwise>
+                <xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
             </xsl:choose>
         </xsl:copy>
     </xsl:template>
@@ -96,6 +99,33 @@
                 <xsl:with-param name="synnotes" select="$synnotes"/>
             </xsl:apply-templates>
         </fragref>
+    </xsl:template>
+    
+    <xsl:template match="*[contains(@class,' pr-d/groupcomp ')]/
+        *[contains(@class,' pr-d/kwd ') or contains(@class,' pr-d/oper ') or contains(@class,' pr-d/sep ') or contains(@class,' pr-d/delim ')]
+         [not(@importance) or @importance='required']"
+        mode="convert-title-group-to-fragment">
+        <xsl:choose>
+            <xsl:when test="preceding-sibling::*[1][not(@importance) or @importance='required'][contains(@class,' pr-d/kwd ') or contains(@class,' pr-d/oper ') or contains(@class,' pr-d/sep ') or contains(@class,' pr-d/delim ')]">
+                <!-- Already combined with previous -->
+            </xsl:when>
+            <xsl:when test="following-sibling::*[1][not(@importance) or @importance='required'][contains(@class,' pr-d/kwd ') or contains(@class,' pr-d/oper ') or contains(@class,' pr-d/sep ') or contains(@class,' pr-d/delim ')]">
+                <xsl:copy>
+                    <xsl:apply-templates select="@*" mode="convert-title-group-to-fragment"/>
+                    <xsl:apply-templates mode="convert-title-group-to-fragment"/>
+                    <xsl:apply-templates select="following-sibling::*[1]" mode="combine-groupcomp"/>
+                </xsl:copy>
+            </xsl:when>
+            <xsl:otherwise><xsl:next-match/></xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="combine-groupcomp">
+        <!-- Stop going with anything else -->
+    </xsl:template>
+    <xsl:template match="*[contains(@class,' pr-d/kwd ') or contains(@class,' pr-d/oper ') or contains(@class,' pr-d/sep ') or contains(@class,' pr-d/delim ')][not(@importance) or @importance='required']" mode="combine-groupcomp">
+        <xsl:apply-templates mode="convert-title-group-to-fragment"/>
+        <xsl:apply-templates select="following-sibling::*[1]" mode="combine-groupcomp"/>
     </xsl:template>
     
     <xsl:template match="*" mode="create-fragments">
