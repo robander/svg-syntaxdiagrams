@@ -50,6 +50,15 @@
       <not><isset property="dita.preprocess.reloadstylesheet.svgdiagrams"/></not>
     </condition>
     <makeurl file="${plus.map.temp.dir}" property="plus.map.temp.dir.url" validate="no"/>
+    <pipeline message="Tidy up topics with diagrams" taskname="tidydiagrams">
+      <xslt basedir="${dita.temp.dir}"
+        reloadstylesheet="${dita.preprocess.reloadstylesheet}"
+        style="${dita.plugin.com.ibm.ditatools.svg-diagrams.dir}/xsl/tidy-diagrams.xsl">
+        <ditaFileset format="dita" processingRole="normal"/>
+        <param name="conserve-memory" expression="${conserve-memory}" if:set="conserve-memory"/>
+        <xmlcatalog refid="dita.catalog"/>
+      </xslt>
+    </pipeline>
     <pipeline message="Diagrams to SVG" taskname="svgdiagrams">
       <xslt basedir="${dita.temp.dir}" 
             reloadstylesheet="${dita.preprocess.reloadstylesheet.svgdiagrams}" 
