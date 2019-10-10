@@ -5,7 +5,8 @@
     xmlns:syntaxdiagram-svgobject="http://www.moldflow.com/namespace/2008/plus-allhtml-syntaxdiagram-svgobject" 
     xmlns:svgobject="http://www.moldflow.com/namespace/2008/dita/svgobject" 
     xmlns:syntaxdiagram2svg="http://www.moldflow.com/namespace/2008/syntaxdiagram2svg" 
-    exclude-result-prefixes="syntaxdiagram-svgobject syntaxdiagram2svg xs">
+    xmlns:dcs="http://rtpdoc01.rtp.raleigh.ibm.com:9082/kc/dcs"
+    exclude-result-prefixes="syntaxdiagram-svgobject syntaxdiagram2svg xs dcs">
 
     
 <xsl:import href="plugin:com.moldflow.dita.syntaxdiagram2svg:xsl/syntaxdiagram2svg.xsl"/>
@@ -40,7 +41,7 @@
 
     <!-- Top-level syntax diagram elements. -->
     <xsl:template match="*[contains(@class, &apos; pr-d/syntaxdiagram &apos;)]" mode="syntaxdiagram-svgobject:default">
-        <fig>
+        <fig dcs:outputclass="syntaxdiagram">
             <xsl:copy-of select="@*"/>
             <xsl:attribute name="class">- topic/fig </xsl:attribute>
             <!--<xsl:call-template name="commonattributes"></xsl:call-template>
@@ -78,7 +79,9 @@
     </xsl:template>
     <xsl:template match="*[contains(@class,' pr-d/synnoteref ')]" mode="collect-synnotes">
         <xsl:variable name="noteid" select="substring-after(@href,'/')"/>
-        <xsl:if test="generate-id(.)=generate-id((ancestor::*[contains(@class,' pr-d/syntaxdiagram ')]//*[contains(@class,' pr-d/synnoteref ')][contains(@href,concat('/',$noteid))])[1])">
+        <xsl:if test="generate-id(.)=
+            generate-id((ancestor::*[contains(@class,' pr-d/syntaxdiagram ')]//*[contains(@class,' pr-d/synnoteref ')]
+                                [substring-after(@href,'/') = $noteid])[1])">
             <xsl:copy-of select="ancestor::*[contains(@class,' pr-d/syntaxdiagram ')]//*[contains(@class,' pr-d/synnote ')][@id=$noteid]"/>
         </xsl:if>
     </xsl:template>
@@ -221,7 +224,7 @@
             <xsl:with-param name="prefix" select="$prefix" as="xs:string"/>
             <xsl:with-param name="grouplevel" select="$grouplevel"/>
           </xsl:apply-templates>
-          </xsl:if>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template match="*[contains(@class,' pr-d/groupcomp ')]" mode="syntaxdiagram2svg:create-accessible-version">
@@ -233,7 +236,7 @@
             <xsl:with-param name="grouplevel" select="$grouplevel"/>
         </xsl:apply-templates>
         <xsl:if test="parent::wrapper">
-            <xsl:apply-templates select="following-sibling::*[1]" mode="syntaxdiagram2svg:create-accessible-version">
+          <xsl:apply-templates select="following-sibling::*[1]" mode="syntaxdiagram2svg:create-accessible-version">
               <xsl:with-param name="prefix" select="$prefix" as="xs:string"/>
               <xsl:with-param name="grouplevel" select="$grouplevel"/>
           </xsl:apply-templates>
@@ -248,7 +251,7 @@
             <xsl:with-param name="grouplevel" select="$grouplevel"/>
         </xsl:apply-templates>
         <xsl:if test="parent::wrapper">
-            <xsl:apply-templates select="following-sibling::*[1]" mode="syntaxdiagram2svg:create-accessible-version">
+          <xsl:apply-templates select="following-sibling::*[1]" mode="syntaxdiagram2svg:create-accessible-version">
               <xsl:with-param name="prefix" select="$prefix" as="xs:string"/>
               <xsl:with-param name="grouplevel" select="$grouplevel"/>
           </xsl:apply-templates>
