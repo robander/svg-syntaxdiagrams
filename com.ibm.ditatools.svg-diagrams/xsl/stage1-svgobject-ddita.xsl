@@ -3,7 +3,7 @@
   xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:svgobject="http://www.moldflow.com/namespace/2008/dita/svgobject"
   xmlns:hash="com.moldflow.xslt.hash"
-  xmlns:dcs="com.ibm.ditatools.dcs"
+  xmlns:dcs="http://rtpdoc01.rtp.raleigh.ibm.com:9082/kc/dcs"
   exclude-result-prefixes="hash">
   
   <xsl:param name="plus-svgobject-format" select="'object'"/>
@@ -114,8 +114,11 @@
     </xsl:result-document>
     
     <xsl:variable name="image-element">
-      <desc class="- topic/desc "><image class="- topic/image " outputclass="generated-diagram">
-        <xsl:attribute name="href">
+      <desc class="- topic/desc ">
+        <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
+        <image class="- topic/image " outputclass="generated-diagram">
+          <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
+          <xsl:attribute name="href">
           <xsl:value-of
             select="concat($plus-svgobject-path, '/', $external-svg-name)"/>
           <!-- For now ... how about we just use SVG file name? If we can't handle it as <object> do it as <image>.
@@ -154,6 +157,7 @@
     <xsl:choose>
       <xsl:when test="$plus-svgobject-format='object'">
         <figgroup class="- topic/figgroup " outputclass="span">
+          <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
           <xsl:if test="$baseline-shift = 'yes'">
             <xsl:attribute name="svgobject:baseline-shift">
               <xsl:value-of
@@ -161,6 +165,9 @@
             </xsl:attribute>
           </xsl:if>
           <object class="- topic/object " outputclass="generated-diagram">
+            <!-- Scale is not usually allowed on object; expect it to be ignored unless code is written to catch it. -->
+            <xsl:copy-of select="ancestor-or-self::*[contains(@class,' pr-d/syntaxdiagram ')]/@scale"/>
+            <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
             <!-- Leave placeholders for width/height to fix up in later pipeline stage,
                             perhaps after JavaScript has resized the SVG's bounding box. -->
             <xsl:attribute name="svgobject:width"></xsl:attribute>
@@ -182,16 +189,28 @@
             </xsl:attribute>
             <xsl:attribute name="dcs:alt"><xsl:value-of select="$alt"/></xsl:attribute>
             <xsl:attribute name="dcs:object">syntaxdiagram</xsl:attribute>
+            <xsl:attribute name="dcs:accessible">
+              <xsl:value-of select="if (contains($FILENAME,'.dita'))
+                then (substring-before($FILENAME,'.dita'))
+                else ($FILENAME)"/>
+              <xsl:text>_syn</xsl:text>
+              <xsl:value-of select="generate-id(.)"/>
+            </xsl:attribute>
             <xsl:attribute name="type">image/svg+xml</xsl:attribute>
             <!--<xsl:copy-of select="$image-element"/>-->
             <xsl:if test="not(empty($textversion))">
-              <desc class="- topic/desc "><codeblock class="+ topic/pre pr-d/codeblock "><xsl:copy-of select="$textversion"/></codeblock></desc>
+              <desc class="- topic/desc ">
+                <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
+                <codeblock class="+ topic/pre pr-d/codeblock ">
+                  <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
+                  <xsl:copy-of select="$textversion"/></codeblock></desc>
             </xsl:if>
           </object>
         </figgroup>
       </xsl:when>
       <xsl:when test="$plus-svgobject-format='raster'">
         <figgroup class="- topic/figgroup " outputclass="span">
+          <xsl:copy-of select="ancestor-or-self::*[@xtrf][1]/@xtrf | ancestor-or-self::*[@xtrc][1]/@xtrc"/>
           <xsl:if test="$baseline-shift = 'yes'">
             <xsl:attribute name="svgobject:baseline-shift">
               <xsl:value-of

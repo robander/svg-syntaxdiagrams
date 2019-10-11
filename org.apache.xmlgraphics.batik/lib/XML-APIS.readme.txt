@@ -1,3 +1,0 @@
-renamed xml-apis-ext.jar to xml-apis-extORIGINAPLUSJAR
-
-Moved in xml-apis-ext-1.3.04.jar from DITA-OT and renamed to xml-apis-ext.jar

@@ -41,6 +41,7 @@ function syntaxdiagram_boxed_init(g)
   box.setAttribute("width", runningWidth + 2 * syntaxdiagram_Constants.box_padding_horizontal);
   box.setAttribute("height", maxHeightAbove + maxHeightBelow + 2 * syntaxdiagram_Constants.box_padding_vertical);
   box.setAttribute("rx", syntaxdiagram_Constants.box_corner_radius[g.getAttributeNS("http://www.moldflow.com/namespace/2008/syntaxdiagram2svg", "element")]);
+  box.setAttribute("class", "syntax" + g.getAttributeNS("http://www.moldflow.com/namespace/2008/syntaxdiagram2svg", "element"));
   g.appendChild(box);
 
   g.setAttributeNS("http://www.moldflow.com/namespace/2008/syntaxdiagram2svg", "syntaxdiagram2svg:width", runningWidth + 2 * syntaxdiagram_Constants.box_padding_horizontal);

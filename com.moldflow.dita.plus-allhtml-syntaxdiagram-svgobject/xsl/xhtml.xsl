@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:syntaxdiagram-svgobject="http://www.moldflow.com/namespace/2008/plus-allhtml-syntaxdiagram-svgobject" xmlns:svgobject="http://www.moldflow.com/namespace/2008/dita/svgobject" xmlns:syntaxdiagram2svg="http://www.moldflow.com/namespace/2008/syntaxdiagram2svg" version="2.0" exclude-result-prefixes="syntaxdiagram-svgobject syntaxdiagram2svg">
 
-    <xsl:import xmlns:dita="http://dita-ot.sourceforge.net" href="../../com.moldflow.dita.syntaxdiagram2svg/xsl/syntaxdiagram2svg.xsl"/>
+    <xsl:import xmlns:dita="http://dita-ot.sourceforge.net" href="plugin:com.moldflow.dita.syntaxdiagram2svg:xsl/syntaxdiagram2svg.xsl"/>
 
     <xsl:param name="plus-syntaxdiagram-format" select="'svgobject'"/>
     <xsl:param name="plus-allhtml-syntaxdiagram-svgobject-csspath" select="''"/>
